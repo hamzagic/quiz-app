@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    margin: 0 auto;
+}
+
+.btnContainer {
+    display: flex;
+    width: 200px;
+    max-width: 100%;
+    justify-content: space-around;
+    margin: 0 auto;
+}

@@ -1,0 +1,29 @@
+.container {
+    background-color: #0C1B33;
+    color: #fff;
+    height: 100vh;
+    width: 6vw;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.list {
+   list-style-type: none; 
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+
+.listItem {
+    margin: 10px 0;
+    cursor: pointer;
+    a {
+        text-decoration: none;
+        color: #fff;
+    }
+}
