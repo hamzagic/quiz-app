@@ -1,0 +1,73 @@
+.container {
+    text-align: center;
+    position: relative;
+}
+
+.card {
+  border: 1px solid #ccc;
+  width: 20vw;
+  max-width: 100%;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+.btnContainer {
+    width: 9vw;
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.inputContainer {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-start;
+    height: 30px;
+}
+
+$bg-color: #FFFFFF;
+$toggle-bg-color: #4281A4;
+$toggle-nub-color: #4281A4;
+$font-color: #000;
+
+.checkboxContainer{
+  display: flex;
+  justify-content: flex-start;
+  height: 30px;
+    input[type="checkbox"]{
+       vertical-align: middle;
+    }
+
+    label{
+      color: $font-color;
+    }
+
+    input[type="checkbox"] + label::before{
+    }
+
+    input[type="checkbox"] + label::after{
+    }
+
+    input[type="checkbox"]:checked + label::after{
+    }
+}
+
+.optionsContainer {
+    display: flex;
+    justify-content: flex-start;
+    height: 30px;
+}
+
+.calendarContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 30px;
+}
+
+.closeBtn {
+  cursor: pointer;
+  text-align: right;
+}

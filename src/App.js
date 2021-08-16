@@ -7,6 +7,7 @@ import Profile from './pages/profile/Profile';
 import Users from './pages/users/Users';
 import School from './pages/school/School';
 import Staff from './pages/staff/Staff';
+import CreateQuiz from './pages/quiz/create/CreateQuiz';
 
 import './App.scss';
 
@@ -16,10 +17,11 @@ function App() {
       <Route exact path="/" component={Dashboard} />
       <Route path="/login" component={Login} />
       <Route path="/profile" component={Profile} />
-      <Route path="/quiz" component={Quiz} />
+      <Route exact path="/quiz" component={Quiz} />
       <Route path="/users" component={Users} />
       <Route path="/school" component={School} />
       <Route path="/staff" component={Staff} />
+      <Route path="/quiz/create" component={CreateQuiz} />
     </div>
   );
 }

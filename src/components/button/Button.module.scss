@@ -1,3 +1,8 @@
+.btnContainer {
+    display: flex;
+    align-items: center;
+}
+
 .btnContainer:hover {
     opacity: 0.8;
 }
