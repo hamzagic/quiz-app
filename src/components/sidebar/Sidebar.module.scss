@@ -10,7 +10,6 @@
   left: 0;
   top: 0;
   position: fixed;
-  z-index: -1;
 }
 
 .list {
@@ -38,7 +37,7 @@ svg {
   margin-right: 5px;
 }
 
-@media (min-width: 600px) and (max-width: 1075px) {
+@media (min-width: 10px) and (max-width: 1075px) {
   .item {
     display: none;
   }

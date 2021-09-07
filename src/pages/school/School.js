@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
+import Button from '../../components/button/Button';
 import AddSchool from './add/AddSchool';
 import styles from './School.module.scss';
 
-import Button from '../../components/button/Button';
-
-// school creation and list must be visible to admin only
-// staff user must be able to view their school profile
-// staff user admin must be able to edit their school
 const School = () => {
   const btnStyle = {
     border: 'none',
@@ -15,28 +11,29 @@ const School = () => {
     color: '#fff',
     padding: '10px',
     borderRadius: '5px',
+    fontWeight: 'bold',
     cursor: 'pointer'
   }
 
-  const [open, setOpen] = useState(false);
+  const [viewPanel, setViewPanel] = useState(false);
 
-  const handleOpen = () => {
-      setOpen(true);
+  const handleClick = () => {
+    console.log('clicked');
+    setViewPanel(true);
   }
 
-  const handleClose = () => {
-    setOpen(false);
-  }
+  const title = "Add School";
 
   return (
     <div>
       <div className={styles.container}>
         <h1>Schools</h1>
         <div className={styles.btnContainer}>
-          <Button title="Add School" styles={btnStyle} click={handleOpen} />
+          <Button title={title} styles={btnStyle} click={handleClick} />
         </div>
-
-        <AddSchool />
+        { viewPanel && <div>
+          <AddSchool />
+        </div>}
 
         <p>Schools list (filter by active and inactive)</p>
       </div>

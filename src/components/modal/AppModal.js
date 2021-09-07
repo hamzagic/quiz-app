@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import styles from './AppModal.module.scss';
 
 const AppModal = (props) => {
