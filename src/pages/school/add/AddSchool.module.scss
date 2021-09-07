@@ -19,3 +19,16 @@ input {
   padding: 10px;
   margin: 5px;
 }
+
+.closePanelBtn {
+  text-align: end;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+@media (max-width: 450px) {
+  .formContainer {
+    width: 300px;
+    max-width: 100%;
+  }
+}

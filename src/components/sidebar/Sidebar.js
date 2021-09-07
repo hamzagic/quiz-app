@@ -8,24 +8,34 @@ const Sidebar = () => {
         <div className={styles.container}>
             <ul className={styles.list}>
                 <li className={styles.listItem}>
-                  <FaHome />
-                    <Link to="/" className={styles.item}>Dashboard</Link>
+                    <Link to="/">
+                    <FaHome />
+                    <span className={styles.item}>Dashboard</span>
+                    </Link>
                 </li>
                 <li className={styles.listItem}>
-                  <FaDiceD6 />
-                    <Link to="/quiz" className={styles.item}>Quizzes</Link>
+                    <Link to="/quiz">
+                      <FaDiceD6 />
+                      <span className={styles.item}>Quizzes</span>
+                    </Link>
                 </li>
                 <li className={styles.listItem}>
-                  <FaUserGraduate />
-                <Link to="/users" className={styles.item}>Students</Link>
+                  <Link to="/users">
+                    <FaUserGraduate />
+                    <span className={styles.item}>Students</span>
+                  </Link>
                 </li>
                 <li className={styles.listItem}>
+                <Link to="/school">
                   <FaSchool />
-                <Link to="/school" className={styles.item}>Schools</Link>
+                  <span className={styles.item}>Schools</span>
+                </Link>
                 </li>
                 <li className={styles.listItem}>
+                <Link to="/profile">
                   <FaUser />
-                <Link to="/profile" className={styles.item}>Profile</Link>
+                  <span className={styles.item}>Profile</span>
+                </Link>
                 </li>
             </ul>
         </div>

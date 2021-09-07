@@ -5,10 +5,20 @@
     margin: 0 auto;
 }
 
-.btnContainer {
+.btnContainers {
     display: flex;
     width: 200px;
     max-width: 100%;
     justify-content: space-around;
     margin: 0 auto;
+}
+
+
+@media (max-width: 450px) {
+  .container {
+    justify-content: center;
+  }
+  .detailsContainer  {
+    margin: 0 auto;
+  }
 }

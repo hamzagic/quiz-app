@@ -1,10 +1,14 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { hideAddPanel } from '../../../store/reducers/schoolReducer';
 import Input from '../../../components/input/Input';
 import Button from '../../../components/button/Button';
 
 import styles from './AddSchool.module.scss';
 
 const AddSchool = () => {
+  const dispatch = useDispatch();
+
   const handleName = () => {
 
   }
@@ -28,24 +32,29 @@ const AddSchool = () => {
     marginRight: '5px'
   }
 
-  const handleSend = () => {
+  const handleCreate = () => {
     console.log('send clicked');
   }
 
-  const handleCancel = () => {
-    console.log('cancel clicked');
+  const handleClear = () => {
+    // clear fields
+  }
+
+  const handleClosePanel = () => {
+    dispatch(hideAddPanel());
   }
 
   return(
     <div className={styles.formContainer}>
+      <div className={styles.closePanelBtn} onClick={handleClosePanel}>x</div>
       <Input placeholder="School Name" className={styles.input} type="text" onChange={handleName} />
       <Input placeholder="Address" type="text" onChange={handleName} />
       <Input placeholder="Email" type="text" onChange={handleName} />
       <Input placeholder="Phone Number" type="text" onChange={handleName} />
       <Input placeholder="Contact Person" type="text" onChange={handleName} />
       <div className={styles.btnContainer}>
-        <Button title="Cancel" styles={cancelBtnStyle} click={handleCancel} />
-        <Button title="Create" styles={btnStyle} click={handleSend} />
+        <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />
+        <Button title="Create" styles={btnStyle} click={handleCreate} />
       </div>
     </div>
   );

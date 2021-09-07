@@ -44,9 +44,23 @@ const QuizList = () => {
         borderRadius: '5px'
     }
 
+    const btnStyle = {
+      background: '#6622CC',
+      color: '#fff',
+      border: 'none',
+      padding: '5px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginLeft: '10px'
+  }
+
+  const handleDetails = (item) => {
+    console.log(item);
+  }
+
     return(
         <div className={styles.container}>
-            <div className={styles.btnContainer}>
+            <div className={styles.btnContainers}>
                 <Button title="Active quizzes" styles={buttonStyle} />
                 <Button title="All quizzes" styles={buttonStyle} />
             </div>
@@ -56,9 +70,12 @@ const QuizList = () => {
                        <p>Quiz Name: {item.title}</p>
                        <p>Created: {item.created_at}</p>
                        <p>Active: {item.active ? 'Yes' : 'No'}</p>
+                       <div className={styles.detailsContainer}>
+                        <Button title="Details" styles={btnStyle} click={() => handleDetails(item.id)} />
+                       </div>
                     </ListItem>
                </div>
-           ))} 
+           ))}
         </div>
     );
 }

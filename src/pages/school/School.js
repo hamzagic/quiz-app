@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { displayAddPanel } from '../../store/reducers/schoolReducer';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Button from '../../components/button/Button';
 import AddSchool from './add/AddSchool';
 import styles from './School.module.scss';
 
 const School = () => {
+  const showPanel = useSelector((state) => state.school.value);
+  const dispatch = useDispatch();
+
   const btnStyle = {
     border: 'none',
     background: '#6622CC',
@@ -15,11 +20,9 @@ const School = () => {
     cursor: 'pointer'
   }
 
-  const [viewPanel, setViewPanel] = useState(false);
-
   const handleClick = () => {
     console.log('clicked');
-    setViewPanel(true);
+    dispatch(displayAddPanel());
   }
 
   const title = "Add School";
@@ -31,10 +34,9 @@ const School = () => {
         <div className={styles.btnContainer}>
           <Button title={title} styles={btnStyle} click={handleClick} />
         </div>
-        { viewPanel && <div>
+        { showPanel && <div>
           <AddSchool />
         </div>}
-
         <p>Schools list (filter by active and inactive)</p>
       </div>
       <Sidebar />
