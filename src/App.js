@@ -8,12 +8,15 @@ import Users from './pages/users/Users';
 import School from './pages/school/School';
 import Staff from './pages/staff/Staff';
 import CreateQuiz from './pages/quiz/create/CreateQuiz';
+import Header from './components/header/Header'
 
 import './App.scss';
 
 function App() {
+  // todo: hide header on login/signup pages
   return (
     <div className="App">
+      <Header />
       <Route exact path="/" component={Dashboard} />
       <Route path="/login" component={Login} />
       <Route path="/profile" component={Profile} />

@@ -1,4 +1,11 @@
 .container {
     text-align: center;
     position: relative;
+    z-index: -2;
+}
+
+.btnContainer {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
 }

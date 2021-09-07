@@ -1,18 +1,20 @@
 .container {
-    background-color: #0C1B33;
-    color: #fff;
-    height: 100vh;
-    width: 6vw;
-    max-width: 100%;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    left: 0;
+  background-color: #0C1B33;
+  color: #fff;
+  height: 100vh;
+  width: 10vw;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  justify-items: start;
+  left: 0;
+  top: 0;
+  position: fixed;
+  z-index: -1;
 }
 
 .list {
-   list-style-type: none; 
+   list-style-type: none;
    padding: 0;
    display: flex;
    flex-direction: column;
@@ -26,4 +28,18 @@
         text-decoration: none;
         color: #fff;
     }
+}
+
+.item {
+  display: inline-block;
+}
+
+svg {
+  margin-right: 5px;
+}
+
+@media (min-width: 600px) and (max-width: 1075px) {
+  .item {
+    display: none;
+  }
 }
