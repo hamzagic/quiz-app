@@ -5,7 +5,7 @@
 
 .card {
   border: 1px solid #ccc;
-  width: 20vw;
+  width: 30vw;
   max-width: 100%;
   padding: 20px;
   border-radius: 5px;
@@ -24,7 +24,29 @@
     margin-bottom: 10px;
     display: flex;
     justify-content: flex-start;
-    height: 30px;
+}
+
+.textContainer {
+  display: flex;
+  align-items: center;
+  width: 12vw;
+}
+
+.optionsContainer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.days {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  width: 30px;
 }
 
 $bg-color: #FFFFFF;
@@ -36,6 +58,7 @@ $font-color: #000;
   display: flex;
   justify-content: flex-start;
   height: 30px;
+  // width: 12vw;
     input[type="checkbox"]{
        vertical-align: middle;
     }
@@ -52,12 +75,6 @@ $font-color: #000;
 
     input[type="checkbox"]:checked + label::after{
     }
-}
-
-.optionsContainer {
-    display: flex;
-    justify-content: flex-start;
-    height: 30px;
 }
 
 .calendarContainer {

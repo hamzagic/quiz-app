@@ -63,12 +63,17 @@ const CreateQuiz = () => {
     padding: '5px',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '12px'
+    fontSize: '12px',
+    fontWeight: 'bold'
   }
 
   const inputStyle = {
-    width: '40px',
+    width: '60px',
     maxWidth: '100%'
+  }
+
+  const inputName = {
+    width: '15vw'
   }
 
   const handleCreateClick = () => {
@@ -83,19 +88,26 @@ const CreateQuiz = () => {
       <div className={styles.container}>
         <h1>Create a New Quiz</h1>
         <div className={styles.card}>
-          <div className={styles.inputContainer}>
-            <span className='mr-10'>Quiz Name</span>
-            <Input placeholder="Name" />
+          <div className={[styles.inputContainer, 'mb-20'].join(' ')}>
+            <span className={styles.textContainer}>Quiz Name: </span>
+            <Input placeholder="Name" styles={inputName} />
+          </div>
+
+          <div className={styles.optionsContainer}>
+            <div className={styles.textContainer}>Questions per page:</div>
+            <Input type="number" min="1" styles={inputStyle} />
+          </div>
+          <div className={[styles.optionsContainer, 'mb-20'].join(' ')}>
+            <span className={styles.textContainer}>Duration: </span>
+            <Input type="number" min="1" styles={inputStyle} />
+            <span className={[styles.days, 'ml-05'].join(' ')}>day(s).</span>
           </div>
           <div className={styles.checkboxContainer}>
-            <label htmlFor="temp">Back Button</label>
-            <input type="checkbox" />
-          </div>
-          <div className={styles.optionsContainer}>
-            <div className="mr-05">Questions per page</div><Input type="number" min="1" styles={inputStyle} />
+            <span className={styles.textContainer}>Back Button:</span>
+            <div className={styles.checkbox}><input type="checkbox" /></div>
           </div>
           <div className={[styles.calendarContainer, 'mt-10', 'mb-10'].join(' ')}>
-            <div className='mr-05'>Start date: </div>
+            <div className={styles.textContainer}>Start date: </div>
             <Button click={openModal} title='Select Date' styles={btnCalendar} />
             <Modal
               isOpen={modalIsOpen}
@@ -106,9 +118,6 @@ const CreateQuiz = () => {
               <div onClick={closeModal} className={styles.closeBtn}>x</div>
               <CalendarComponent onChange={onChange} value={value} />
             </Modal>
-          </div>
-          <div className={[styles.optionsContainer, 'mb-10'].join(' ')}>
-            <span className='mr-05'>Duration: </span><Input type="number" min="1" styles={inputStyle} /> <span className='ml-05'>day(s).</span>
           </div>
           <div className={styles.btnContainer}>
             <Button title="Create" styles={btnCreateStyle} click={handleCreateClick} />

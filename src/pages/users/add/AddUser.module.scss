@@ -1,0 +1,34 @@
+.formContainer {
+  width: 600px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btnContainer {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+input {
+  width: 300px;
+  max-width: 100%;
+  padding: 10px;
+  margin: 5px;
+}
+
+.closePanelBtn {
+  text-align: end;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+@media (max-width: 450px) {
+  .formContainer {
+    width: 300px;
+    max-width: 100%;
+  }
+}
