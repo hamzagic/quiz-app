@@ -1,0 +1,17 @@
+.selectContainer {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px;
+}
+
+.selectStyle {
+  max-width: 100%;
+  border: 1px solid rgb(133, 133, 133);
+  border-radius: 3px;
+  line-height: 30px;
+  padding: 2px;
+  font-size: 14px;
+  color: rgb(59, 59, 59);
+}

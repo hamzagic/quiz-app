@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import styles from './Sidebar.module.scss';
-import { FaHome, FaDiceD6, FaUserGraduate, FaSchool, FaUser } from "react-icons/fa";
+import { FaHome, FaDiceD6, FaUserGraduate, FaSchool, FaUser, FaUserNinja } from "react-icons/fa";
 
 const Sidebar = () => {
     return(
@@ -29,6 +29,12 @@ const Sidebar = () => {
                 <Link to="/school">
                   <FaSchool />
                   <span className={styles.item}>Schools</span>
+                </Link>
+                </li>
+                <li className={styles.listItem}>
+                <Link to="/staff">
+                  <FaUserNinja />
+                  <span className={styles.item}>Staff</span>
                 </Link>
                 </li>
                 <li className={styles.listItem}>

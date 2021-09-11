@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { hideAddPanel } from '../../../store/reducers/schoolReducer';
 import Input from '../../../components/input/Input';
 import Button from '../../../components/button/Button';
+// import Select from '../../../components/select/Select';
 
 import styles from './AddSchool.module.scss';
 
@@ -32,6 +33,12 @@ const AddSchool = () => {
     marginRight: '5px'
   }
 
+  // const selectStyle = {
+  //   width: '300px',
+  //   maxWidth: '100%',
+  //   height: '40px'
+  // };
+
   const handleCreate = () => {
     console.log('send clicked');
   }
@@ -43,7 +50,7 @@ const AddSchool = () => {
   const handleClosePanel = () => {
     dispatch(hideAddPanel());
   }
-
+  // todo: select staff by school id or display staff only after school is created.
   return(
     <div className={styles.formContainer}>
       <div className={styles.closePanelBtn} onClick={handleClosePanel}>x</div>
@@ -51,7 +58,7 @@ const AddSchool = () => {
       <Input placeholder="Address" type="text" onChange={handleName} />
       <Input placeholder="Email" type="text" onChange={handleName} />
       <Input placeholder="Phone Number" type="text" onChange={handleName} />
-      <Input placeholder="Contact Person" type="text" onChange={handleName} />
+      {/* <Select title="Contact Person" items={staff} onChange={handleName} styles={selectStyle} /> */}
       <div className={styles.btnContainer}>
         <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />
         <Button title="Create" styles={btnStyle} click={handleCreate} />
