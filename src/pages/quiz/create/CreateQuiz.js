@@ -6,19 +6,24 @@ import Input from '../../../components/input/Input';
 import Button from '../../../components/button/Button';
 import CalendarComponent from '../../../components/calendar/CalendarComponent';
 import Modal from 'react-modal';
+import API from '../../../routes/api';
+import { apiConstants } from '../../../constants/constants';
 
 const CreateQuiz = () => {
-  const [value, onChange] = useState();
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [name, setName] = useState('');
+  const [questionNumber, setQuestionNumber] = useState(0);
+  const [questionsPerPage, setQuestionsPerPage] = useState(0);
+  const [hasBackButton, setHasBackButton] = useState(true);
+
   const history = useHistory();
+
   Modal.setAppElement('#root');
 
   const openModal = () => {
     setIsOpen(true);
-  }
-
-  const afterOpenModal = () => {
-
   }
 
   const closeModal = () => {
@@ -76,13 +81,53 @@ const CreateQuiz = () => {
     width: '15vw'
   }
 
-  const handleCreateClick = () => {
-    console.log('clicked');
+  const handleCreateClick = async () => {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('start_date', startDate);
+    formData.append('end_date', endDate);
+    formData.append('questions_per_page', questionsPerPage);
+    formData.append('total_questions', questionNumber);
+    formData.append('back_button', hasBackButton);
+
+    await API.post(apiConstants.quiz_post, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => console.log(err));
   }
 
   const handleCancelClick = () => {
     history.goBack();
   }
+
+  const handleDateRange = (e) => {
+    let start = e[0].toLocaleString().split(',')[0];
+    let end = e[1].toLocaleString().split(',')[0];
+    setStartDate(start);
+    setEndDate(end);
+  }
+
+  const handleName = (e) => {
+    setName(e.target.value);
+  }
+
+  const handleQuestionsPage = (e) => {
+    setQuestionsPerPage(e.target.value);
+  }
+
+  const handleQuestionNumber = (e) => {
+    setQuestionNumber(e.target.value);
+  }
+
+  const handleBackButton = (e) => {
+    setHasBackButton(e.target.checked);
+  }
+
   return (
     <div>
       <div className={styles.container}>
@@ -90,35 +135,39 @@ const CreateQuiz = () => {
         <div className={styles.card}>
           <div className={[styles.inputContainer, 'mb-20'].join(' ')}>
             <span className={styles.textContainer}>Quiz Name: </span>
-            <Input placeholder="Name" styles={inputName} />
+            <Input placeholder="Name" styles={inputName} value={name} onChange={handleName} />
           </div>
 
           <div className={styles.optionsContainer}>
             <div className={styles.textContainer}>Questions per page:</div>
-            <Input type="number" min="1" styles={inputStyle} />
+            <Input type="number" min="1" styles={inputStyle} value={questionsPerPage} onChange={handleQuestionsPage} />
           </div>
-          <div className={[styles.optionsContainer, 'mb-20'].join(' ')}>
-            <span className={styles.textContainer}>Duration: </span>
-            <Input type="number" min="1" styles={inputStyle} />
-            <span className={[styles.days, 'ml-05'].join(' ')}>day(s).</span>
+
+          <div className={styles.optionsContainer}>
+            <div className={styles.textContainer}>Number of questions:</div>
+            <Input type="number" min="1" styles={inputStyle} value={questionNumber} onChange={handleQuestionNumber} />
           </div>
+
           <div className={styles.checkboxContainer}>
             <span className={styles.textContainer}>Back Button:</span>
-            <div className={styles.checkbox}><input type="checkbox" /></div>
+            <div className={styles.checkbox}><input type="checkbox" value={hasBackButton} onChange={handleBackButton} /></div>
           </div>
           <div className={[styles.calendarContainer, 'mt-10', 'mb-10'].join(' ')}>
-            <div className={styles.textContainer}>Start date: </div>
-            <Button click={openModal} title='Select Date' styles={btnCalendar} />
+            <div className={styles.textContainer}>Start/End date: </div>
+            <Button click={openModal} title='Select Dates' styles={btnCalendar} />
             <Modal
               isOpen={modalIsOpen}
-              onAfterOpen={afterOpenModal}
+              // onAfterOpen={afterOpenModal}
               onRequestClose={closeModal}
               style={customStyles}
-              contentLabel="Example Modal Here">
+            >
               <div onClick={closeModal} className={styles.closeBtn}>x</div>
-              <CalendarComponent onChange={onChange} value={value} />
+              <CalendarComponent
+                onChange={handleDateRange}
+                title="Start/End Dates" />
             </Modal>
           </div>
+
           <div className={styles.btnContainer}>
             <Button title="Create" styles={btnCreateStyle} click={handleCreateClick} />
             <Button title="Cancel" styles={btnCancelStyle} click={handleCancelClick} />

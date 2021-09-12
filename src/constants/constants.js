@@ -4,6 +4,12 @@ export const apiConstants = {
   'subject_get': 'subject',
   'subject_post': 'subject',
   'school_get': 'school',
-  'school_post': 'school'
+  'school_post': 'school',
+  'staff_get': 'staff',
+  'staff_post': 'staff',
+  'student_get': 'student',
+  'student_post': 'student',
+  'quiz_get': 'quiz',
+  'quiz_post': 'quiz'
 };
 

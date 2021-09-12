@@ -6,7 +6,8 @@ import 'react-calendar/dist/Calendar.css';
 const CalendarComponent = (props) => {
   return (
     <div className={styles.calendarContainer}>
-          <Calendar onChange={props.onChange} value={props.value} />
+          <div className={styles.title}>{props.title}</div>
+          <Calendar onChange={props.onChange} value={props.value} inputRef={props.refs} returnValue="range" selectRange={true} />
         </div>
   );
 }
