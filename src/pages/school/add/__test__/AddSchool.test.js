@@ -63,4 +63,6 @@ describe('AddSchool.js', () => {
     expect(emailInput.value).toBe('');
     expect(phoneNumberInput.value).toBe('');
   });
+
+  // todo: add test for when the user clicks the Create button
 });
