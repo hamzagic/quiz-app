@@ -7,7 +7,12 @@ const CalendarComponent = (props) => {
   return (
     <div className={styles.calendarContainer}>
           <div className={styles.title}>{props.title}</div>
-          <Calendar onChange={props.onChange} value={props.value} inputRef={props.refs} returnValue="range" selectRange={true} />
+          <Calendar
+            onChange={props.onChange}
+            value={props.value}
+            returnValue="range"
+            selectRange={true}
+          />
         </div>
   );
 }
