@@ -21,7 +21,6 @@ const School = () => {
   }
 
   const handleClick = () => {
-    console.log('clicked');
     dispatch(displayAddPanel());
   }
 

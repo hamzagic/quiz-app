@@ -6,6 +6,7 @@ const Input = (props) => {
         <div className={styles.inputContainer}>
             <div style={props.styles}>{props.label}</div>
             <input
+            data-testid="test-input"
             type={props.type}
             placeholder={props.placeholder}
             style={props.styles}
