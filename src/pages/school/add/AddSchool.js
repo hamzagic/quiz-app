@@ -87,7 +87,7 @@ const AddSchool = () => {
   }
   // todo: select staff by school id or display staff only after school is created.
   return(
-    <div className={styles.formContainer}>
+    <div className={styles.formContainer} data-testid="test-school">
       <div className={styles.closePanelBtn} onClick={handleClosePanel}>x</div>
       <Input placeholder="School Name" className={styles.input} value={name} type="text" onChange={handleName} />
       <Input placeholder="Address" type="text" onChange={handleAddress} value={address} />

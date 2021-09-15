@@ -125,7 +125,10 @@ const AddUser = () => {
   }
 
   const handleClear = () => {
-    // clear fields
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
   }
 
   const handleClosePanel = () => {

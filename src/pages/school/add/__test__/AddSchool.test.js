@@ -4,11 +4,6 @@ import AddSchool from '../AddSchool';
 import { Provider } from 'react-redux';
 import store from '../../../../store/store';
 
-const mockedSetValue = jest.fn();
-const mockedObj = {
-  target: { value: 'hello' }
-}
-
 const MockedProvider = () => {
   return (
     <Provider store={store}>
