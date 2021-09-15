@@ -19,6 +19,21 @@ class Validator {
       return `This field must have at least ${size} characters.`
     }
   }
+
+  passwordLength(value, size) {
+    if (value.length < (size - 1)) return `This field must have at least ${size} characters.`
+  }
+
+  selectRequired(value, defaultValue) {
+    if ((value.length === 0) || (value === defaultValue)) return 'Invalid selection.'
+  }
+
+  phoneNumber(value, size) {
+    const isNumber = /^\d+$/.test(value);
+    if (!isNumber) return 'Invalid phone number';
+
+    if (value.toString().trim().length < parseInt(size)) return 'Invalid phone number format';
+  }
 }
 
 export default Validator;

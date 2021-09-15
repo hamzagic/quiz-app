@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { hideAddPanel } from '../../../store/reducers/staffReducer';
+import Validator from '../../../utils/validator';
 
 import Input from '../../../components/input/Input';
 import Button from '../../../components/button/Button';
@@ -22,11 +23,19 @@ const AddUser = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedSchool, setSelectedSchool] = useState(null);
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedSchool, setSelectedSchool] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
 
   const [message, setMessage] = useState('');
+
+  const [firstNameError, setFirstNameError] = useState(' ');
+  const [lastNameError, setLastNameError] = useState(' ');
+  const [emailError, setEmailError] = useState(' ');
+  const [passwordError, setPasswordError] = useState(' ');
+  const [schoolError, setSchoolError] = useState('')
+  const [subjectError, setSubjectError] = useState('')
+  const [roleError, setRoleError] = useState('')
 
   useEffect (() => {
     API.get(apiConstants.role_get)
@@ -61,6 +70,15 @@ const AddUser = () => {
     cursor: 'pointer'
   }
 
+  const btnDisabled = {
+    border: 'none',
+    background: '#ccc',
+    color: '#fff',
+    padding: '10px 15px',
+    borderRadius: '5px',
+    cursor: 'no-drop'
+  }
+
   const cancelBtnStyle = {
     border: 'none',
     background: '#ff0000',
@@ -79,33 +97,46 @@ const AddUser = () => {
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
+    validateField(firstName, 2, setFirstNameError);
   }
 
   const handleLastName = (e) => {
     setLastName(e.target.value);
+    validateField(lastName, 2, setLastNameError);
   }
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
+    validateEmail(email);
   }
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
+    validatePassword(password, 6);
   }
 
   const handleSchool = (e) => {
     setSelectedSchool(e.target.value);
+    if (e.target.value === "School") setSelectedSchool('');
+    validateSelected(selectedSchool, "0", setSchoolError);
   }
 
   const handleSubject = (e) => {
     setSelectedSubject(e.target.value);
+    if (e.target.value === "Subject") setSelectedSubject('');
   }
 
   const handleRole = (e) => {
     setSelectedRole(e.target.value);
+    if (e.target.value === "Role") setSelectedRole('');
   }
 
   const handleCreate = async () => {
+    const checkSchool = validateSelected(selectedSchool, "0", setSchoolError);
+    const checkRole = validateSelected(selectedRole, "0", setRoleError);
+    const checkSubject = validateSelected(selectedSubject, "0", setSubjectError);
+
+    if (checkSchool || checkRole || checkSubject) return;
     setMessage('');
     const formData = new FormData();
     formData.append('first_name', firstName);
@@ -137,26 +168,128 @@ const AddUser = () => {
     setSelectedSchool('');
     setSelectedSubject('');
     setSelectedRole('');
+    setFirstNameError('');
+    setLastNameError('');
+    setEmailError('');
+    setPasswordError('');
+    setSchoolError('');
+    setSubjectError('');
+    setRoleError('');
   }
 
   const handleClosePanel = () => {
     dispatch(hideAddPanel());
   }
 
+  const validateField = (value, min, fn) => {
+    fn('');
+    const validator = new Validator();
+    const minLength = validator.minLength(value, min);
+    if (minLength) fn(minLength);
+  }
+
+  const validateEmail = () => {
+    setEmailError('');
+    const validator = new Validator();
+    const emailVerification = validator.email(email);
+    if (emailVerification) setEmailError(emailVerification);
+  }
+
+  const validatePassword = () => {
+    setPasswordError('');
+    const validator = new Validator();
+    const passwordVerification = validator.passwordLength(password, 6);
+    if (passwordVerification) setPasswordError(passwordVerification);
+  }
+
+  const validateSelected = (value, defaultValue, fn) => {
+    fn('');
+    const validator = new Validator();
+    const schoolVerification = validator.selectRequired(value, defaultValue);
+    if (schoolVerification) fn(schoolVerification);
+  }
+
+  const errorFields =
+    firstNameError ||
+    lastNameError ||
+    emailError ||
+    passwordError ||
+    schoolError ||
+    roleError ||
+    subjectError
+  ;
+  const hasErrors = errorFields ? true : false;
+
   return(
     <div className={styles.formContainer}>
       <div className={styles.closePanelBtn} onClick={handleClosePanel}>x</div>
       <div className={styles.message}>{message}</div>
-      <Input placeholder="First Name" className={styles.input} type="text" onChange={handleFirstName} value={firstName}  />
-      <Input placeholder="Last Name" type="text" onChange={handleLastName} value={lastName} />
-      <Input placeholder="Email" type="text" onChange={handleEmail} value={email} />
-      <Input placeholder="Password" type="text" onChange={handlePassword} value={password} />
-      <Select items={schoolItems} title="School" id="id" name="name" onChange={handleSchool} styles={selectStyle} value={selectedSchool} selected={selectedSchool} />
-      <Select items={subjectItems} title="Subject" id="subject_id" name="subject_name" onChange={handleSubject} styles={selectStyle} value={selectedSubject} selected={selectedSubject} />
-      <Select items={roleItems} title="Role" id="role_id" name="role_title" onChange={handleRole} styles={selectStyle} value={selectedRole} selected={selectedRole} />
+      <Input
+        placeholder="First Name"
+        className={styles.input}
+        type="text"
+        onChange={handleFirstName}
+        value={firstName}
+        onBlur={() => validateField(firstName, 2, setFirstNameError)}
+      />
+      <div className={styles.errorMessage}>{firstNameError}</div>
+      <Input
+        placeholder="Last Name"
+        type="text"
+        onChange={handleLastName}
+        value={lastName}
+        onBlur={() => validateField(lastName, 2, setLastNameError)}
+      />
+      <div className={styles.errorMessage}>{lastNameError}</div>
+      <Input
+        placeholder="Email"
+        type="text"
+        onChange={handleEmail}
+        value={email}
+        onBlur={validateEmail}
+      />
+      <div className={styles.errorMessage}>{emailError}</div>
+      <Input
+        placeholder="Password"
+        type="password"
+        onChange={handlePassword}
+        value={password}
+        onBlur={() => validatePassword(password, 6, setPasswordError)}
+      />
+      <div className={styles.errorMessage}>{passwordError}</div>
+      <Select
+        items={schoolItems}
+        title="School"
+        name="name"
+        onChange={handleSchool}
+        styles={selectStyle}
+        value={selectedSchool}
+        onBlur={() => validateSelected(selectedSchool, "0", setSchoolError)}
+      />
+      <div className={styles.errorMessage}>{schoolError}</div>
+      <Select
+        items={subjectItems}
+        title="Subject"
+        name="subject_name"
+        onChange={handleSubject}
+        styles={selectStyle}
+        value={selectedSubject}
+        onBlur={() => validateSelected(selectedSubject, "0", setSubjectError)}
+      />
+      <div className={styles.errorMessage}>{subjectError}</div>
+      <Select
+        items={roleItems}
+        title="Role"
+        name="role_title"
+        onChange={handleRole}
+        styles={selectStyle}
+        value={selectedRole}
+        onBlur={() => validateSelected(selectedRole, "0", setRoleError)}
+      />
+      <div className={styles.errorMessage}>{roleError}</div>
       <div className={styles.btnContainer}>
         <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />
-        <Button title="Create" styles={btnStyle} click={handleCreate} />
+        <Button title="Create" styles={hasErrors ? btnDisabled : btnStyle} click={handleCreate} disabled={hasErrors} />
       </div>
     </div>
   );

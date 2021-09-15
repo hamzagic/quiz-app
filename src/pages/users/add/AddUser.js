@@ -25,6 +25,7 @@ const AddUser = () => {
   const [lastNameError, setLastNameError] = useState(' ');
   const [emailError, setEmailError] = useState(' ');
   const [passwordError, setPasswordError] = useState(' ');
+  const [schoolError, setSchoolError] = useState('')
 
   const title = 'School';
 
@@ -72,18 +73,22 @@ const AddUser = () => {
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
+    validateField(firstName, 2, setFirstNameError);
   }
 
   const handleLastName = (e) => {
     setLastName(e.target.value);
+    validateField(lastName, 2, setLastNameError);
   }
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
+    validateEmail(email);
   }
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
+    validatePassword(password, 6);
   }
 
   const handleSchool = (e) => {
@@ -92,27 +97,29 @@ const AddUser = () => {
   }
 
   const handleCreate = async () => {
-    // setMessage('');
-    // const formData = new FormData();
+    const checkSchool = validateSelected(selectedSchool);
+    if (checkSchool) return;
+    setMessage('');
+    const formData = new FormData();
 
-    // formData.append('first_name', firstName);
-    // formData.append('last_name', lastName);
-    // formData.append('email', email);
-    // formData.append('password', password);
-    // formData.append('school_id', selectedSchool);
+    formData.append('first_name', firstName);
+    formData.append('last_name', lastName);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('school_id', selectedSchool);
 
-    // await API.post('student', formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data'
-    //   }
-    // })
-    // .then(res => {
-    //   console.log(res);
-    //   setMessage('Student created successfully');
-    //   handleClear();
+    await API.post('student', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(res => {
+      console.log(res);
+      setMessage('Student created successfully');
+      handleClear();
 
-    // })
-    // .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
   }
 
   const handleClear = () => {
@@ -121,6 +128,11 @@ const AddUser = () => {
     setEmail('');
     setPassword('');
     setSelectedSchool('');
+    setFirstNameError(' ');
+    setLastNameError(' ');
+    setEmailError(' ');
+    setPasswordError(' ');
+    setSchoolError('');
   }
 
   const handleClosePanel = () => {
@@ -142,7 +154,28 @@ const AddUser = () => {
     if (emailVerification) setEmailError(emailVerification);
   }
 
-  const hasErrors = firstNameError || lastNameError || emailError || passwordError ? true : false;
+  const validatePassword = () => {
+    setPasswordError('');
+    const validator = new Validator();
+    const passwordVerification = validator.passwordLength(password, 6);
+    if (passwordVerification) setPasswordError(passwordVerification);
+  }
+
+  const validateSelected = (value, defaultValue) => {
+    setSchoolError('');
+    const validator = new Validator();
+    const schoolVerification = validator.selectRequired(value, defaultValue);
+    if (schoolVerification) setSchoolError(schoolVerification);
+  }
+
+  const errorFields =
+    firstNameError ||
+    lastNameError ||
+    emailError ||
+    passwordError ||
+    schoolError
+  ;
+  const hasErrors = errorFields ? true : false;
 
   return(
     <div className={styles.formContainer}>
@@ -176,13 +209,23 @@ const AddUser = () => {
       <div className={styles.errorMessage}>{emailError}</div>
       <Input
         placeholder="Password"
-        type="text"
+        type="password"
         onChange={handlePassword}
         value={password}
-        onBlur={() => validateField(password, 6, setPasswordError)} />
+        onBlur={() => validatePassword(password, 6, setPasswordError)} />
         <div className={styles.errorMessage}>{passwordError}</div>
 
-      <Select items={schoolItems} title={title} id="id" name="name" onChange={handleSchool} styles={selectStyle} value={selectedSchool} selected={setSelectedSchool} />
+      <Select
+        items={schoolItems}
+        title={title}
+        name="name"
+        onChange={handleSchool}
+        styles={selectStyle}
+        value={selectedSchool}
+        onBlur={() => validateSelected(selectedSchool, "0")}
+      />
+      <div className={styles.errorMessage}>{schoolError}</div>
+
       <div className={styles.btnContainer}>
         <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />
         <Button title="Create" styles={hasErrors ? btnDisabled : btnStyle} click={handleCreate} disabled={hasErrors} />
