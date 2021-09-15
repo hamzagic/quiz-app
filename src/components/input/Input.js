@@ -11,6 +11,7 @@ const Input = (props) => {
             placeholder={props.placeholder}
             style={props.styles}
             onChange={props.onChange}
+            onBlur={props.onBlur}
             value={props.value}
             min={props.min} />
         </div>

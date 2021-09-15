@@ -9,6 +9,7 @@
 
 .btnContainer {
   margin-bottom: 10px;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
 }
@@ -24,6 +25,10 @@ input {
   text-align: end;
   cursor: pointer;
   font-weight: bold;
+}
+
+.message {
+  color: green;
 }
 
 @media (max-width: 450px) {

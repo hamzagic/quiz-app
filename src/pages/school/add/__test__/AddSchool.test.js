@@ -16,7 +16,7 @@ describe('AddSchool.js', () => {
   beforeEach(() => {
     render(<MockedProvider  />);
   })
-  it('renders the form input components', () => {
+  it('renders the form input components', async () => {
     const schoolNameInput = screen.getByPlaceholderText("School Name");
     const schoolAddressInput = screen.getByPlaceholderText(/address/i);
     const emailInput = screen.getByPlaceholderText(/email/i);
@@ -27,7 +27,7 @@ describe('AddSchool.js', () => {
     expect(phoneNumberInput).toBeInTheDocument();
   });
 
-  it('updates the input values when user types something', () => {
+  it('updates the input values when user types something', async () => {
     const schoolNameInput = screen.getByPlaceholderText("School Name");
     const schoolAddressInput = screen.getByPlaceholderText(/address/i);
     const emailInput = screen.getByPlaceholderText(/email/i);
@@ -42,7 +42,7 @@ describe('AddSchool.js', () => {
     expect(phoneNumberInput.value).toBe('Some Phone Number');
   });
 
-  it('must clear all fields when Cancel button is clicked', () => {
+  it('must clear all fields when Cancel button is clicked', async () => {
     const schoolNameInput = screen.getByPlaceholderText("School Name");
     const schoolAddressInput = screen.getByPlaceholderText(/address/i);
     const emailInput = screen.getByPlaceholderText(/email/i);

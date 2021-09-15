@@ -4,6 +4,7 @@ import { hideAddPanel } from '../../../store/reducers/studentReducer';
 import Input from '../../../components/input/Input';
 import Button from '../../../components/button/Button';
 import Select from '../../../components/select/Select';
+import Validator from '../../../utils/validator';
 
 import API from '../../../routes/api';
 import { apiConstants } from '../../../constants/constants';
@@ -17,7 +18,13 @@ const AddUser = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [selectedSchool, setSelectedSchool] = useState('');
+
+  const [message, setMessage] = useState('');
+  const [firstNameError, setFirstNameError] = useState(' ');
+  const [lastNameError, setLastNameError] = useState(' ');
+  const [emailError, setEmailError] = useState(' ');
+  const [passwordError, setPasswordError] = useState(' ');
 
   const title = 'School';
 
@@ -36,6 +43,15 @@ const AddUser = () => {
     padding: '10px 15px',
     borderRadius: '5px',
     cursor: 'pointer'
+  }
+
+  const btnDisabled = {
+    border: 'none',
+    background: '#ccc',
+    color: '#fff',
+    padding: '10px 15px',
+    borderRadius: '5px',
+    cursor: 'no-drop'
   }
 
   const cancelBtnStyle = {
@@ -72,29 +88,31 @@ const AddUser = () => {
 
   const handleSchool = (e) => {
     setSelectedSchool(e.target.value);
-    if (e.target.value === title) setSelectedSchool(null);
-    console.log(selectedSchool);
-    console.log(e.target.value);
+    if (e.target.value === title) setSelectedSchool('');
   }
 
   const handleCreate = async () => {
-    const formData = new FormData();
+    // setMessage('');
+    // const formData = new FormData();
 
-    formData.append('first_name', firstName);
-    formData.append('last_name', lastName);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('school_id', selectedSchool);
+    // formData.append('first_name', firstName);
+    // formData.append('last_name', lastName);
+    // formData.append('email', email);
+    // formData.append('password', password);
+    // formData.append('school_id', selectedSchool);
 
-    await API.post('student', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then(res => {
-      console.log(res);
-    })
-    .catch(err => console.log(err));
+    // await API.post('student', formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   }
+    // })
+    // .then(res => {
+    //   console.log(res);
+    //   setMessage('Student created successfully');
+    //   handleClear();
+
+    // })
+    // .catch(err => console.log(err));
   }
 
   const handleClear = () => {
@@ -102,24 +120,72 @@ const AddUser = () => {
     setLastName('');
     setEmail('');
     setPassword('');
-    setSelectedSchool(null);
+    setSelectedSchool('');
   }
 
   const handleClosePanel = () => {
+    handleClear();
     dispatch(hideAddPanel());
   }
+
+  const validateField = (value, min, fn) => {
+    fn('');
+    const validator = new Validator();
+    const minLength = validator.minLength(value, min);
+    if (minLength) fn(minLength);
+  }
+
+  const validateEmail = () => {
+    setEmailError('');
+    const validator = new Validator();
+    const emailVerification = validator.email(email);
+    if (emailVerification) setEmailError(emailVerification);
+  }
+
+  const hasErrors = firstNameError || lastNameError || emailError || passwordError ? true : false;
 
   return(
     <div className={styles.formContainer}>
       <div className={styles.closePanelBtn} onClick={handleClosePanel}>x</div>
-      <Input placeholder="First Name" className={styles.input} type="text" onChange={handleFirstName} value={firstName} />
-      <Input placeholder="Last Name" type="text" onChange={handleLastName} value={lastName} />
-      <Input placeholder="Email" type="text" onChange={handleEmail} value={email} />
-      <Input placeholder="Password" type="text" onChange={handlePassword} value={password} />
-      <Select items={schoolItems} title={title} id="id" name="name" onChange={handleSchool} styles={selectStyle} value={selectedSchool} />
+      <div className={styles.message}>{message}</div>
+      <Input
+        placeholder="First Name"
+        className={styles.input}
+        type="text"
+        onChange={handleFirstName}
+        value={firstName}
+        onBlur={() => validateField(firstName, 2, setFirstNameError)}
+      />
+      <div className={styles.errorMessage}>{firstNameError}</div>
+
+      <Input
+        placeholder="Last Name"
+        type="text"
+        onChange={handleLastName}
+        value={lastName}
+        onBlur={() => validateField(lastName, 2, setLastNameError)}
+      />
+      <div className={styles.errorMessage}>{lastNameError}</div>
+      <Input
+        placeholder="Email"
+        type="text"
+        onChange={handleEmail}
+        value={email}
+        onBlur={validateEmail}
+      />
+      <div className={styles.errorMessage}>{emailError}</div>
+      <Input
+        placeholder="Password"
+        type="text"
+        onChange={handlePassword}
+        value={password}
+        onBlur={() => validateField(password, 6, setPasswordError)} />
+        <div className={styles.errorMessage}>{passwordError}</div>
+
+      <Select items={schoolItems} title={title} id="id" name="name" onChange={handleSchool} styles={selectStyle} value={selectedSchool} selected={setSelectedSchool} />
       <div className={styles.btnContainer}>
         <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />
-        <Button title="Create" styles={btnStyle} click={handleCreate} />
+        <Button title="Create" styles={hasErrors ? btnDisabled : btnStyle} click={handleCreate} disabled={hasErrors} />
       </div>
     </div>
   );

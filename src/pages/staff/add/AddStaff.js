@@ -26,6 +26,8 @@ const AddUser = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
 
+  const [message, setMessage] = useState('');
+
   useEffect (() => {
     API.get(apiConstants.role_get)
     .then(res => {
@@ -104,6 +106,7 @@ const AddUser = () => {
   }
 
   const handleCreate = async () => {
+    setMessage('');
     const formData = new FormData();
     formData.append('first_name', firstName);
     formData.append('last_name', lastName);
@@ -120,6 +123,8 @@ const AddUser = () => {
     })
     .then(res => {
       console.log(res);
+      setMessage('Staff created successfully');
+      handleClear();
     })
     .catch(err => console.log(err));
   }
@@ -129,6 +134,9 @@ const AddUser = () => {
     setLastName('');
     setEmail('');
     setPassword('');
+    setSelectedSchool('');
+    setSelectedSubject('');
+    setSelectedRole('');
   }
 
   const handleClosePanel = () => {
@@ -138,13 +146,14 @@ const AddUser = () => {
   return(
     <div className={styles.formContainer}>
       <div className={styles.closePanelBtn} onClick={handleClosePanel}>x</div>
+      <div className={styles.message}>{message}</div>
       <Input placeholder="First Name" className={styles.input} type="text" onChange={handleFirstName} value={firstName}  />
       <Input placeholder="Last Name" type="text" onChange={handleLastName} value={lastName} />
       <Input placeholder="Email" type="text" onChange={handleEmail} value={email} />
       <Input placeholder="Password" type="text" onChange={handlePassword} value={password} />
-      <Select items={schoolItems} title="School" id="id" name="name" onChange={handleSchool} styles={selectStyle} value={selectedSchool} />
-      <Select items={subjectItems} title="Subject" id="subject_id" name="subject_name" onChange={handleSubject} styles={selectStyle} value={selectedSubject} />
-      <Select items={roleItems} title="Role" id="role_id" name="role_title" onChange={handleRole} styles={selectStyle} value={selectedRole} />
+      <Select items={schoolItems} title="School" id="id" name="name" onChange={handleSchool} styles={selectStyle} value={selectedSchool} selected={selectedSchool} />
+      <Select items={subjectItems} title="Subject" id="subject_id" name="subject_name" onChange={handleSubject} styles={selectStyle} value={selectedSubject} selected={selectedSubject} />
+      <Select items={roleItems} title="Role" id="role_id" name="role_title" onChange={handleRole} styles={selectStyle} value={selectedRole} selected={selectedRole} />
       <div className={styles.btnContainer}>
         <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />
         <Button title="Create" styles={btnStyle} click={handleCreate} />
