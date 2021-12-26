@@ -32,6 +32,7 @@ const AddUser = () => {
   useEffect(() => {
     API.get(apiConstants.school_get)
     .then(res => {
+      console.log(res.data.data);
       setSchoolItems(res.data.data);
     })
     .catch(err => console.log(err));
@@ -92,7 +93,14 @@ const AddUser = () => {
   }
 
   const handleSchool = (e) => {
-    setSelectedSchool(e.target.value);
+    let schoolId;
+    schoolItems.map((item) => {
+      if(item.name === e.target.value) {
+        schoolId = item.id;
+      }
+      return schoolId;
+    })
+    setSelectedSchool(schoolId);
     if (e.target.value === title) setSelectedSchool('');
   }
 
@@ -100,24 +108,25 @@ const AddUser = () => {
     const checkSchool = validateSelected(selectedSchool);
     if (checkSchool) return;
     setMessage('');
-    const formData = new FormData();
+  
+    const data = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
+      school_id: selectedSchool
+    }
 
-    formData.append('first_name', firstName);
-    formData.append('last_name', lastName);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('school_id', selectedSchool);
-
-    await API.post('student', formData, {
+    console.log("sdfsf", selectedSchool);
+    await API.post('student', data, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'application/json'
       }
     })
     .then(res => {
       console.log(res);
       setMessage('Student created successfully');
       handleClear();
-
     })
     .catch(err => console.log(err));
   }

@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import style from './Dashboard.module.scss';
+import client from '../../routes/api';
 
 const Dashboard = () => {
+    useEffect(() => {
+        client.get("/").then((res) => {
+            console.log(res);
+        })
+    }, []);
     return(
         <div>
             <div className={style.container}>
