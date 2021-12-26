@@ -33,9 +33,16 @@ const AddUser = () => {
   const [lastNameError, setLastNameError] = useState(' ');
   const [emailError, setEmailError] = useState(' ');
   const [passwordError, setPasswordError] = useState(' ');
-  const [schoolError, setSchoolError] = useState('')
-  const [subjectError, setSubjectError] = useState('')
-  const [roleError, setRoleError] = useState('')
+  const [schoolError, setSchoolError] = useState('');
+  const [subjectError, setSubjectError] = useState('');
+  const [roleError, setRoleError] = useState('');
+
+  const [schoolId, setSchoolId] = useState('');
+  const [subjectId, setSubjectId] = useState('');
+  const [roleId, setRoleId] = useState('');
+  let school;
+  let subject;
+  let role;
 
   useEffect (() => {
     API.get(apiConstants.role_get)
@@ -116,18 +123,39 @@ const AddUser = () => {
   }
 
   const handleSchool = (e) => {
+    let id = schoolItems.filter((item) => {
+      return item.name === e.target.value;
+    });
     setSelectedSchool(e.target.value);
+    if(id && id[0]) {
+      school = id[0].id;
+      setSchoolId(school);
+    } 
     if (e.target.value === "School") setSelectedSchool('');
     validateSelected(selectedSchool, "0", setSchoolError);
   }
 
   const handleSubject = (e) => {
+    let id = subjectItems.filter((item) => {
+      return item.subject_name === e.target.value;
+    });
     setSelectedSubject(e.target.value);
+    if(id && id[0]) {
+      subject = id[0].subject_id;
+      setSubjectId(subject);
+    }
     if (e.target.value === "Subject") setSelectedSubject('');
   }
 
   const handleRole = (e) => {
+    let id = roleItems.filter((item) => {
+      return item.role_title === e.target.value;
+    });
     setSelectedRole(e.target.value);
+    if(id && id[0]) {
+      role = id[0].role_id;
+      setRoleId(role);
+    }
     if (e.target.value === "Role") setSelectedRole('');
   }
 
@@ -138,18 +166,22 @@ const AddUser = () => {
 
     if (checkSchool || checkRole || checkSubject) return;
     setMessage('');
-    const formData = new FormData();
-    formData.append('first_name', firstName);
-    formData.append('last_name', lastName);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('school_id', selectedSchool);
-    formData.append('subject_id', selectedSubject);
-    formData.append('role_id', selectedRole);
+    
+    const data = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
+      school_id: schoolId,
+      subject_id: subjectId,
+      role_id: roleId
+    }
 
-    await API.post(apiConstants.staff_post, formData, {
+    console.log("data", data);
+
+    await API.post(apiConstants.staff_post, data, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'application/json'
       }
     })
     .then(res => {
