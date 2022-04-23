@@ -23,19 +23,21 @@
 .inputContainer {
     margin-bottom: 10px;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ccc;
 }
 
 .textContainer {
-  display: flex;
-  align-items: center;
-  width: 14vw;
+  
 }
 
 .optionsContainer {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
   margin-top: 20px;
+  background-color: #ccc;
 }
 
 .days {
@@ -56,9 +58,9 @@ $font-color: #000;
 
 .checkboxContainer{
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   height: 30px;
-  // width: 12vw;
+  background-color: #ccc;
     input[type="checkbox"]{
        vertical-align: middle;
     }
@@ -79,9 +81,12 @@ $font-color: #000;
 
 .calendarContainer {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 30px;
+  padding: 5px;
+  margin-bottom: 30px;
+  background-color: #ccc;
 }
 
 .closeBtn {

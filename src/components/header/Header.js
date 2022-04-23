@@ -16,7 +16,7 @@ const Header = () => {
           <IconButton edge="start" color="primary">
             <MdMenu color="#fff" />
           </IconButton>
-            <h1 >Quiz App</h1>
+            <h1 className={styles.headerTitle}>Quiz App</h1>
           </div>
           <IconButton edge="end">
             <FaBell color="#fff" />

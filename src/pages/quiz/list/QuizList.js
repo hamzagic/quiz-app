@@ -5,9 +5,12 @@ import Button from '../../../components/button/Button';
 import { apiConstants } from '../../../constants/constants';
 import API from '../../../routes/api';
 import bt from '../../../components/buttons/BtnPrimary.module.scss';
+import QuizDetails from '../details/QuizDetails';
 
 const QuizList = () => {
   const [quizList, setQuizList] = useState([]);
+  const [showDetails, setShowDetails] = useState(false);
+  const [id, setId] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,8 +26,10 @@ const QuizList = () => {
     fetchData();
   }, []);
 
-  const handleSeeQuizDetails = () => {
-    console.log('quiz details clicked');
+  const handleSeeQuizDetails = (quiz) => {
+    console.log('quiz details', quiz);
+    setId(quiz);
+    setShowDetails(true);
   };
 
   const buttonStyle = {
@@ -36,7 +41,7 @@ const QuizList = () => {
     borderRadius: '5px',
     width: '150px',
     marginLeft: '5px',
-    marginRight: '5px'
+    marginRight: '5px',
   };
 
   const btnStyle = {
@@ -51,47 +56,52 @@ const QuizList = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.btnContainers}>
-        <Button title='Active quizzes' styles={buttonStyle} />
-        <Button title='All quizzes' styles={buttonStyle} />
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Quiz Name</th>
-            <th>Total Questions</th>
-            <th>Questions Per Page</th>
-            <th>Back Button</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Active</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        {quizList.map((quiz, id) => {
-          return (
-            <tbody key={id}>
+      {!showDetails && (
+        <>
+          <div className={styles.btnContainers}>
+            <Button title='Active quizzes' styles={buttonStyle} />
+            <Button title='All quizzes' styles={buttonStyle} />
+          </div>
+          <table>
+            <thead>
               <tr>
-                <td>{quiz.quiz_name}</td>
-                <td>{quiz.total_questions}</td>
-                <td>{quiz.questions_per_page}</td>
-                <td>{quiz.back_button ? 'Yes' : 'No'}</td>
-                <td>{quiz.start_date}</td>
-                <td>{quiz.end_date}</td>
-                <td>{quiz.active ? "Yes" : "No"}</td>
-                <td>
-                  <button
-                    className={bt.btnPrimary}
-                    onClick={handleSeeQuizDetails}
-                  >
-                    Edit Quiz
-                  </button>
-                </td>
+                <th>Quiz Name</th>
+                <th>Total Questions</th>
+                <th>Questions Per Page</th>
+                <th>Back Button</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Active</th>
+                <th>Action</th>
               </tr>
-            </tbody>
-          );
-        })}
-      </table>
+            </thead>
+            {quizList.map((quiz, id) => {
+              return (
+                <tbody key={id}>
+                  <tr>
+                    <td>{quiz.quiz_name}</td>
+                    <td>{quiz.total_questions}</td>
+                    <td>{quiz.questions_per_page}</td>
+                    <td>{quiz.back_button ? 'Yes' : 'No'}</td>
+                    <td>{quiz.start_date}</td>
+                    <td>{quiz.end_date}</td>
+                    <td>{quiz.active ? 'Yes' : 'No'}</td>
+                    <td>
+                      <button
+                        className={bt.btnPrimary}
+                        onClick={() => handleSeeQuizDetails(quiz.quiz_id)}
+                      >
+                        Details
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            })}
+          </table>
+        </>
+      )}
+      {showDetails && <QuizDetails id={id}/>}
     </div>
   );
 };

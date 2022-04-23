@@ -69,16 +69,20 @@ const CreateQuiz = () => {
     borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '12px',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginLeft: '10px'
   }
 
   const inputStyle = {
-    width: '60px',
-    maxWidth: '100%'
+    // width: '60px',
+    maxWidth: '100%',
+    border: '1px solid #ccc',
+    borderRadius: '5px'
   }
 
   const inputName = {
-    width: '15vw'
+    border: '1px solid #ccc',
+    borderRadius: '5px'
   }
 
   const handleCreateClick = async () => {
@@ -128,24 +132,28 @@ const CreateQuiz = () => {
     setHasBackButton(e.target.checked);
   }
 
+  const formatDates = () => {
+
+  }
+
   return (
     <div>
       <div className={styles.container}>
         <h1>Create a New Quiz</h1>
         <div className={styles.card}>
           <div className={[styles.inputContainer, 'mb-20'].join(' ')}>
-            <span className={styles.textContainer}>Quiz Name: </span>
+            <div className={styles.textContainer}>Quiz Name: </div>
             <Input placeholder="Name" styles={inputName} value={name} onChange={handleName} />
           </div>
 
-          <div className={styles.optionsContainer}>
-            <div className={styles.textContainer}>Questions per page:</div>
-            <Input type="number" min="1" styles={inputStyle} value={questionsPerPage} onChange={handleQuestionsPage} />
-          </div>
-
-          <div className={styles.optionsContainer}>
+          <div className={styles.inputContainer}>
             <div className={styles.textContainer}>Number of questions:</div>
             <Input type="number" min="1" styles={inputStyle} value={questionNumber} onChange={handleQuestionNumber} />
+          </div>
+
+          <div className={styles.inputContainer}>
+            <div className={styles.textContainer}>Questions per page:</div>
+            <Input type="number" min="1" styles={inputStyle} value={questionsPerPage} onChange={handleQuestionsPage} />
           </div>
 
           <div className={styles.checkboxContainer}>
@@ -153,7 +161,9 @@ const CreateQuiz = () => {
             <div className={styles.checkbox}><input type="checkbox" value={hasBackButton} onChange={handleBackButton} /></div>
           </div>
           <div className={[styles.calendarContainer, 'mt-10', 'mb-10'].join(' ')}>
-            <div className={styles.textContainer}>Start/End date: </div>
+            <div className={styles.textContainer}>Start/End Dates: </div>
+            {startDate && endDate && 
+            <div>{startDate} - {endDate}</div>}
             <Button click={openModal} title='Select Dates' styles={btnCalendar} />
             <Modal
               isOpen={modalIsOpen}
