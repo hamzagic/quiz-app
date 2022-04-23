@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import { displayAddPanel } from '../../store/reducers/staffReducer';
 import Sidebar from '../../components/sidebar/Sidebar';
 import styles from './Staff.module.scss';
@@ -14,7 +14,7 @@ const Staff = () => {
   const dispatch = useDispatch();
   const [staffList, setStaffList] = useState([]);
 
-  const title = "Add Staff";
+  const title = 'Add Staff';
 
   const btnStyle = {
     border: 'none',
@@ -23,8 +23,8 @@ const Staff = () => {
     padding: '10px',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,24 +43,24 @@ const Staff = () => {
   const handleClick = () => {
     console.log('clicked');
     dispatch(displayAddPanel());
-  }
+  };
 
-  const handleEditStaff = () => {
-
-  }
+  const handleEditStaff = () => {};
 
   return (
     <div>
       <div className={styles.container}>
         <h1>Staff</h1>
-        {!showPanel &&
+        {!showPanel && (
           <div className={styles.btnContainer}>
             <Button title={title} styles={btnStyle} click={handleClick} />
           </div>
-        }
-        {showPanel && <div>
-          <AddStaff />
-        </div>}
+        )}
+        {showPanel && (
+          <div>
+            <AddStaff />
+          </div>
+        )}
         {!showPanel && (
           <table>
             <thead>
@@ -73,35 +73,33 @@ const Staff = () => {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              {staffList.map((staff, id) => {
-                return (
-                  <>
-                    <tr key={id}>
-                      <td>{staff.first_name}</td>
-                      <td>{staff.last_name}</td>
-                      <td>{staff.email}</td>
-                      <td>{staff.active}</td>
-                      <td>{staff.role.role_title}</td>
-                      <td>
-                        <button
-                          className={btn.btnPrimary}
-                          onClick={handleEditStaff}
-                        >
-                          Edit School
-                        </button>
-                      </td>
-                    </tr>
-                  </>
-                );
-              })}
-              </tbody>
+            {staffList.map((staff, id) => {
+              return (
+                <tbody key={id}>
+                  <tr>
+                    <td>{staff.first_name}</td>
+                    <td>{staff.last_name}</td>
+                    <td>{staff.email}</td>
+                    <td>{staff.active ? "Yes" : "No"}</td>
+                    <td>{staff.role.role_title}</td>
+                    <td>
+                      <button
+                        className={btn.btnPrimary}
+                        onClick={handleEditStaff}
+                      >
+                        Edit School
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            })}
           </table>
         )}
       </div>
       <Sidebar />
     </div>
   );
-}
+};
 
 export default Staff;

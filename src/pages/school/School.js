@@ -53,11 +53,11 @@ const School = () => {
     <div>
       <div className={styles.container}>
         <h1>Schools</h1>
-        {!showPanel &&
+        {!showPanel && (
           <div className={styles.btnContainer}>
             <Button title={title} styles={btnStyle} click={handleClick} />
           </div>
-        }
+        )}
         {showPanel && (
           <div>
             <AddSchool />
@@ -75,29 +75,27 @@ const School = () => {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              {schoolList.map((school, id) => {
-                return (
-                  <>
-                    <tr key={id}>
-                      <td>{school.name}</td>
-                      <td>{school.address}</td>
-                      <td>{school.phone_number}</td>
-                      <td>{school.active}</td>
-                      <td>{school.created_at}</td>
-                      <td>
-                        <button
-                          className={btn.btnPrimary}
-                          onClick={handleEditSchool}
-                        >
-                          Edit School
-                        </button>
-                      </td>
-                    </tr>
-                  </>
-                );
-              })}
-              </tbody>
+            {schoolList.map((school, id) => {
+              return (
+                <tbody key={id}>
+                  <tr>
+                    <td>{school.name}</td>
+                    <td>{school.address}</td>
+                    <td>{school.phone_number}</td>
+                    <td>{school.active ? "Yes" : "No"}</td>
+                    <td>{school.created_at}</td>
+                    <td>
+                      <button
+                        className={btn.btnPrimary}
+                        onClick={handleEditSchool}
+                      >
+                        Edit School
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            })}
           </table>
         )}
         <div className={styles.table}></div>

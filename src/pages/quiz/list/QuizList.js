@@ -1,83 +1,99 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './QuizList.module.scss';
 import ListItem from './listItem/ListItem';
 import Button from '../../../components/button/Button';
+import { apiConstants } from '../../../constants/constants';
+import API from '../../../routes/api';
+import bt from '../../../components/buttons/BtnPrimary.module.scss';
 
 const QuizList = () => {
-    const quizzesList = [
-        {
-            id: 1,
-            title: 'Biology Test',
-            created_at: '08/10/2021',
-            ends: '08/17/2021',
-            active: true
-        },
-        {
-            id: 2,
-            title: 'Chemistry Test',
-            created_at: '08/11/2021',
-            ends: '08/18/2021',
-            active: true
-        },
-        {
-            id: 3,
-            title: 'Math Test',
-            created_at: '08/14/2021',
-            ends: '08/23/2021',
-            active: true
-        },
-        {
-            id: 4,
-            title: 'History Test',
-            created_at: '08/12/2021',
-            ends: '08/19/2021',
-            active: false
-        }
-    ];
+  const [quizList, setQuizList] = useState([]);
 
-    const buttonStyle = {
-        border: 'none',
-        backgroundColor: '#E34A6F',
-        color: '#fff',
-        padding: '10px',
-        cursor: 'pointer',
-        borderRadius: '5px'
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      await API.get(apiConstants.quiz_get)
+        .then((res) => {
+          console.log(res.data.data);
+          setQuizList(res.data.data);
+        })
+        .catch((err) => {
+          console.log('ERRO! ', err);
+        });
+    };
+    fetchData();
+  }, []);
 
-    const btnStyle = {
-      background: '#6622CC',
-      color: '#fff',
-      border: 'none',
-      padding: '5px',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      marginLeft: '10px'
-  }
+  const handleSeeQuizDetails = () => {
+    console.log('quiz details clicked');
+  };
 
-  const handleDetails = (item) => {
-    console.log(item);
-  }
+  const buttonStyle = {
+    border: 'none',
+    backgroundColor: '#E34A6F',
+    color: '#fff',
+    padding: '5px',
+    cursor: 'pointer',
+    borderRadius: '5px',
+    width: '150px',
+    marginLeft: '5px',
+    marginRight: '5px'
+  };
 
-    return(
-        <div className={styles.container}>
-            <div className={styles.btnContainers}>
-                <Button title="Active quizzes" styles={buttonStyle} />
-                <Button title="All quizzes" styles={buttonStyle} />
-            </div>
-           {quizzesList.map((item) => (
-               <div key={item.id}>
-                   <ListItem>
-                       <p>Quiz Name: {item.title}</p>
-                       <p>Created: {item.created_at}</p>
-                       <p>Active: {item.active ? 'Yes' : 'No'}</p>
-                       <div className={styles.detailsContainer}>
-                        <Button title="Details" styles={btnStyle} click={() => handleDetails(item.id)} />
-                       </div>
-                    </ListItem>
-               </div>
-           ))}
-        </div>
-    );
-}
+  const btnStyle = {
+    background: '#6622CC',
+    color: '#fff',
+    border: 'none',
+    padding: '5px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginLeft: '10px',
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.btnContainers}>
+        <Button title='Active quizzes' styles={buttonStyle} />
+        <Button title='All quizzes' styles={buttonStyle} />
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Quiz Name</th>
+            <th>Total Questions</th>
+            <th>Questions Per Page</th>
+            <th>Back Button</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Active</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        {quizList.map((quiz, id) => {
+          return (
+            <tbody key={id}>
+              <tr>
+                <td>{quiz.quiz_name}</td>
+                <td>{quiz.total_questions}</td>
+                <td>{quiz.questions_per_page}</td>
+                <td>{quiz.back_button ? 'Yes' : 'No'}</td>
+                <td>{quiz.start_date}</td>
+                <td>{quiz.end_date}</td>
+                <td>{quiz.active ? "Yes" : "No"}</td>
+                <td>
+                  <button
+                    className={bt.btnPrimary}
+                    onClick={handleSeeQuizDetails}
+                  >
+                    Edit Quiz
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          );
+        })}
+      </table>
+    </div>
+  );
+};
 
 export default QuizList;
