@@ -22,6 +22,7 @@ const AddSchool = () => {
   const [addressError, setAddressError] = useState(' ');
   const [emailError, setEmailError] = useState(' ');
   const [phoneError, setPhoneError] = useState(' ');
+  const [finished, setFinished] = useState(false);
 
   const handleName = (e) => {
     setName(e.target.value);
@@ -81,7 +82,8 @@ const AddSchool = () => {
     nameError ||
     addressError ||
     emailError ||
-    phoneError
+    phoneError ||
+    finished
   ;
   const hasErrors = errorFields ? true : false;
 
@@ -100,6 +102,8 @@ const AddSchool = () => {
     .then(res => {
       console.log(res);
       setMessage('School created successfully');
+      handleClear();
+      setFinished(true);
     })
     .catch(err => console.log(err));
   }
@@ -113,6 +117,7 @@ const AddSchool = () => {
     setAddressError('');
     setEmailError('');
     setPhoneError('');
+    hasErrors = true;
   }
 
   const validateField = (value, min, fn) => {
@@ -139,6 +144,7 @@ const AddSchool = () => {
   const handleClosePanel = () => {
     dispatch(hideAddPanel());
   }
+
   // todo: select staff by school id or display staff only after school is created.
   return(
     <div className={styles.formContainer} data-testid="test-school">

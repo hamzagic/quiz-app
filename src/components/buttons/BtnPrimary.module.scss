@@ -1,0 +1,14 @@
+@import '../../App.scss';
+
+.btnPrimary {
+  border: none;
+  background: $btn-color-primary;
+  color: $white;
+  padding: 5px;
+  border-radius: 5px;    
+  cursor: pointer;
+  font-size: 12px;
+}
+.btnPrimary:hover {
+  opacity: 0.8;
+}

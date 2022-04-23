@@ -40,6 +40,7 @@ const AddUser = () => {
   const [schoolId, setSchoolId] = useState('');
   const [subjectId, setSubjectId] = useState('');
   const [roleId, setRoleId] = useState('');
+  const [finished, setFinished] = useState(false);
   let school;
   let subject;
   let role;
@@ -188,6 +189,7 @@ const AddUser = () => {
       console.log(res);
       setMessage('Staff created successfully');
       handleClear();
+      setFinished(true);
     })
     .catch(err => console.log(err));
   }
@@ -248,7 +250,8 @@ const AddUser = () => {
     passwordError ||
     schoolError ||
     roleError ||
-    subjectError
+    subjectError ||
+    finished
   ;
   const hasErrors = errorFields ? true : false;
 

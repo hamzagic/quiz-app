@@ -9,6 +9,17 @@
   justify-content: center;
 }
 
+table {
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+thead {
+  margin: 0 auto;
+  background-color: bisque;
+}
+
 @media (max-width: 450px) {
   .container {
     margin-left: 10vw;
