@@ -1,0 +1,12 @@
+.detailContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.detailTitle {
+    font-weight: bold;
+}

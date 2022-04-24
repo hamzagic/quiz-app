@@ -38,7 +38,7 @@ const Users = () => {
         });
     };
     fetchData();
-  }, []);
+  }, [showPanel]);
 
   const handleClick = () => {
     console.log('clicked');

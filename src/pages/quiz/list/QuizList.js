@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { displayAddPanel } from '../../../store/reducers/quizReducer';
 import styles from './QuizList.module.scss';
 import ListItem from './listItem/ListItem';
 import Button from '../../../components/button/Button';
@@ -9,14 +11,15 @@ import QuizDetails from '../details/QuizDetails';
 
 const QuizList = () => {
   const [quizList, setQuizList] = useState([]);
-  const [showDetails, setShowDetails] = useState(false);
+  //const [showDetails, setShowDetails] = useState(false);
   const [id, setId] = useState('');
+  const showPanel = useSelector((state) => state.quiz.value);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
       await API.get(apiConstants.quiz_get)
         .then((res) => {
-          console.log(res.data.data);
           setQuizList(res.data.data);
         })
         .catch((err) => {
@@ -27,9 +30,8 @@ const QuizList = () => {
   }, []);
 
   const handleSeeQuizDetails = (quiz) => {
-    console.log('quiz details', quiz);
     setId(quiz);
-    setShowDetails(true);
+    dispatch(displayAddPanel());
   };
 
   const buttonStyle = {
@@ -56,7 +58,7 @@ const QuizList = () => {
 
   return (
     <div className={styles.container}>
-      {!showDetails && (
+      {!showPanel && (
         <>
           <div className={styles.btnContainers}>
             <Button title='Active quizzes' styles={buttonStyle} />
@@ -67,7 +69,7 @@ const QuizList = () => {
               <tr>
                 <th>Quiz Name</th>
                 <th>Total Questions</th>
-                <th>Questions Per Page</th>
+                {/* <th>Questions Per Page</th> */}
                 <th>Back Button</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -81,7 +83,7 @@ const QuizList = () => {
                   <tr>
                     <td>{quiz.quiz_name}</td>
                     <td>{quiz.total_questions}</td>
-                    <td>{quiz.questions_per_page}</td>
+                    {/* <td>{quiz.questions_per_page}</td> */}
                     <td>{quiz.back_button ? 'Yes' : 'No'}</td>
                     <td>{quiz.start_date}</td>
                     <td>{quiz.end_date}</td>
@@ -101,7 +103,7 @@ const QuizList = () => {
           </table>
         </>
       )}
-      {showDetails && <QuizDetails id={id}/>}
+      {showPanel && <QuizDetails id={id} />}
     </div>
   );
 };

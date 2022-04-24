@@ -34,6 +34,15 @@ class Validator {
 
     if (value.toString().trim().length < parseInt(size)) return 'Invalid phone number format';
   }
+
+  zeroCheck(value) {
+    if (value <= 0) return 'Value must be higher than zero.' 
+  }
+
+  pastDate(date) {
+    const currentDate = new Date().toLocaleDateString();
+    if (date < currentDate) return 'Event must not start in the past.'
+  }
 }
 
 export default Validator;

@@ -38,10 +38,9 @@ const Staff = () => {
         });
     };
     fetchData();
-  }, []);
+  }, [showPanel]);
 
   const handleClick = () => {
-    console.log('clicked');
     dispatch(displayAddPanel());
   };
 

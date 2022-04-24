@@ -28,16 +28,15 @@
     background-color: #ccc;
 }
 
-.textContainer {
-  
+.message {
+  color: green;
+  margin-bottom: 10px;
 }
 
-.optionsContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 20px;
-  background-color: #ccc;
+.errorMessage {
+  font-size: 14px;
+  color: red;
+  margin-bottom: 5px;
 }
 
 .days {

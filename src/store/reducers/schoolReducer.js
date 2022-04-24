@@ -12,10 +12,16 @@ export const schoolSlice = createSlice({
 
     hideAddPanel: (state) => {
       state.value = false;
+    },
+    displayEditPanel: (state, action) => {
+      state.value = action.payload;
+    },
+    showData: (state, action) => {
+      state.value = action.payload
     }
   }
 });
 
-export const { displayAddPanel, hideAddPanel } = schoolSlice.actions;
+export const { displayAddPanel, hideAddPanel, displayEditPanel, showData } = schoolSlice.actions;
 
 export default schoolSlice.reducer;

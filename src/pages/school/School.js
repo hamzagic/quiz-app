@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { displayAddPanel } from '../../store/reducers/schoolReducer';
+import { displayAddPanel, displayEditPanel } from '../../store/reducers/schoolReducer';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Button from '../../components/button/Button';
 import AddSchool from './add/AddSchool';
@@ -13,6 +13,7 @@ const School = () => {
   const showPanel = useSelector((state) => state.school.value);
   const dispatch = useDispatch();
   const [schoolList, setSchoolList] = useState([]);
+  const [id, setId] = useState('');
 
   const btnStyle = {
     border: 'none',
@@ -36,15 +37,17 @@ const School = () => {
         });
     };
     fetchData();
-  }, []);
+  }, [showPanel]);
 
   const handleClick = () => {
     dispatch(displayAddPanel());
   };
 
-  const handleEditSchool = () => {
-    console.log('edit school clicked');
-    // todo: redirect to proper school page to edit
+  const handleEditSchool = (id) => {
+    console.log('edit school', id);
+    setId(id);
+    dispatch(displayEditPanel(id));
+    // dispatch(displayAddPanel());
   };
 
   const title = 'Add School';
@@ -60,7 +63,7 @@ const School = () => {
         )}
         {showPanel && (
           <div>
-            <AddSchool />
+            <AddSchool id={id ? id : ''} />
           </div>
         )}
         {!showPanel && (
@@ -87,7 +90,7 @@ const School = () => {
                     <td>
                       <button
                         className={btn.btnPrimary}
-                        onClick={handleEditSchool}
+                        onClick={() => handleEditSchool(school.id)}
                       >
                         Edit School
                       </button>
