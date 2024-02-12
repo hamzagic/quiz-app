@@ -1,14 +1,14 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import styles from './Sidebar.module.scss';
-import { FaHome, FaDiceD6, FaUserGraduate, FaSchool, FaUser, FaUserNinja } from "react-icons/fa";
+import { FaHome, FaDiceD6, FaUserGraduate, FaUser } from "react-icons/fa";
 
 const Sidebar = () => {
     return(
         <div className={styles.container}>
             <ul className={styles.list}>
                 <li className={styles.listItem}>
-                    <Link to="/">
+                    <Link to="/dashboard">
                     <FaHome />
                     <span className={styles.item}>Dashboard</span>
                     </Link>
@@ -22,20 +22,8 @@ const Sidebar = () => {
                 <li className={styles.listItem}>
                   <Link to="/users">
                     <FaUserGraduate />
-                    <span className={styles.item}>Students</span>
+                    <span className={styles.item}>Users</span>
                   </Link>
-                </li>
-                <li className={styles.listItem}>
-                <Link to="/school">
-                  <FaSchool />
-                  <span className={styles.item}>Schools</span>
-                </Link>
-                </li>
-                <li className={styles.listItem}>
-                <Link to="/staff">
-                  <FaUserNinja />
-                  <span className={styles.item}>Staff</span>
-                </Link>
                 </li>
                 <li className={styles.listItem}>
                 <Link to="/profile">

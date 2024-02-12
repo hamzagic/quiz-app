@@ -4,7 +4,7 @@ class Validator {
   }
   required(value) {
     if (!value.toString().trim().length) {
-      return 'Required field';
+      return 'Required field.';
     }
   }
 

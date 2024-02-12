@@ -11,15 +11,17 @@ import QuizDetails from '../details/QuizDetails';
 
 const QuizList = () => {
   const [quizList, setQuizList] = useState([]);
-  //const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const [id, setId] = useState('');
   const showPanel = useSelector((state) => state.quiz.value);
   const dispatch = useDispatch();
+  const userId = '65c987ccee9f842f1c8f2480';
 
   useEffect(() => {
     const fetchData = async () => {
-      await API.get(apiConstants.quiz_get)
+      await API.get('quiz/' + userId)
         .then((res) => {
+          console.log("result", res);
           setQuizList(res.data.data);
         })
         .catch((err) => {
@@ -60,20 +62,23 @@ const QuizList = () => {
     <div className={styles.container}>
       {!showPanel && (
         <>
-          <div className={styles.btnContainers}>
+        {/* todo: create a filter  for active and inactive quizzes */}
+          {/* <div className={styles.btnContainers}>
             <Button title='Active quizzes' styles={buttonStyle} />
             <Button title='All quizzes' styles={buttonStyle} />
-          </div>
+          </div> */}
           <table>
             <thead>
               <tr>
                 <th>Quiz Name</th>
                 <th>Total Questions</th>
                 {/* <th>Questions Per Page</th> */}
-                <th>Back Button</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                {/* <th>Back Button</th> */}
+                {/* <th>Start Date</th> */}
+                {/* <th>End Date</th> */}
                 <th>Active</th>
+                <th>Shared</th>
+                <th>Date Created</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -81,13 +86,15 @@ const QuizList = () => {
               return (
                 <tbody key={id}>
                   <tr>
-                    <td>{quiz.quiz_name}</td>
-                    <td>{quiz.total_questions}</td>
+                    <td>{quiz.quizName}</td>
+                    <td>{quiz.numberOfQuestions}</td>
                     {/* <td>{quiz.questions_per_page}</td> */}
-                    <td>{quiz.back_button ? 'Yes' : 'No'}</td>
-                    <td>{quiz.start_date}</td>
-                    <td>{quiz.end_date}</td>
-                    <td>{quiz.active ? 'Yes' : 'No'}</td>
+                    {/* <td>{quiz.back_button ? 'Yes' : 'No'}</td> */}
+                    {/* <td>{quiz.start_date}</td> */}
+                    {/* <td>{quiz.end_date}</td> */}
+                    <td>{quiz.isActive ? 'Yes' : 'No'}</td>
+                    <td>{quiz.isShared ? 'Yes' : 'No'}</td>
+                    <td>{quiz.created}</td>
                     <td>
                       <button
                         className={bt.btnPrimary}

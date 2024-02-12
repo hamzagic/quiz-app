@@ -1,42 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideAddPanel } from '../../../store/reducers/studentReducer';
+import { hideAddPanel } from '../../../store/reducers/userReducer';
 import Input from '../../../components/input/Input';
 import Button from '../../../components/button/Button';
-import Select from '../../../components/select/Select';
 import Validator from '../../../utils/validator';
 
 import API from '../../../routes/api';
-import { apiConstants } from '../../../constants/constants';
 
 import styles from './AddUser.module.scss';
 
 const AddUser = () => {
   const dispatch = useDispatch();
-  const [schoolItems, setSchoolItems] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedSchool, setSelectedSchool] = useState('');
 
   const [message, setMessage] = useState('');
   const [firstNameError, setFirstNameError] = useState(' ');
   const [lastNameError, setLastNameError] = useState(' ');
   const [emailError, setEmailError] = useState(' ');
   const [passwordError, setPasswordError] = useState(' ');
-  const [schoolError, setSchoolError] = useState('')
-
-  const title = 'School';
-
-  useEffect(() => {
-    API.get(apiConstants.school_get)
-    .then(res => {
-      console.log(res.data.data);
-      setSchoolItems(res.data.data);
-    })
-    .catch(err => console.log(err));
-  },[]);
 
   const btnStyle = {
     border: 'none',
@@ -66,11 +50,11 @@ const AddUser = () => {
     marginRight: '5px'
   }
 
-  const selectStyle = {
-    width: '300px',
-    maxWidth: '100%',
-    height: '40px'
-  }
+  // const selectStyle = {
+  //   width: '300px',
+  //   maxWidth: '100%',
+  //   height: '40px'
+  // }
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -92,21 +76,7 @@ const AddUser = () => {
     validatePassword(password, 6);
   }
 
-  const handleSchool = (e) => {
-    let schoolId;
-    schoolItems.map((item) => {
-      if(item.name === e.target.value) {
-        schoolId = item.id;
-      }
-      return schoolId;
-    })
-    setSelectedSchool(schoolId);
-    if (e.target.value === title) setSelectedSchool('');
-  }
-
   const handleCreate = async () => {
-    const checkSchool = validateSelected(selectedSchool);
-    if (checkSchool) return;
     setMessage('');
   
     const data = {
@@ -114,10 +84,8 @@ const AddUser = () => {
       last_name: lastName,
       email,
       password,
-      school_id: selectedSchool
     }
 
-    console.log("sdfsf", selectedSchool);
     await API.post('student', data, {
       headers: {
         'Content-Type': 'application/json'
@@ -136,12 +104,10 @@ const AddUser = () => {
     setLastName('');
     setEmail('');
     setPassword('');
-    setSelectedSchool('');
     setFirstNameError(' ');
     setLastNameError(' ');
     setEmailError(' ');
     setPasswordError(' ');
-    setSchoolError('');
   }
 
   const handleClosePanel = () => {
@@ -170,20 +136,11 @@ const AddUser = () => {
     if (passwordVerification) setPasswordError(passwordVerification);
   }
 
-  const validateSelected = (value, defaultValue) => {
-    setSchoolError('');
-    const validator = new Validator();
-    const schoolVerification = validator.selectRequired(value, defaultValue);
-    if (schoolVerification) setSchoolError(schoolVerification);
-  }
-
   const errorFields =
     firstNameError ||
     lastNameError ||
     emailError ||
-    passwordError ||
-    schoolError
-  ;
+    passwordError;
   const hasErrors = errorFields ? true : false;
 
   return(
@@ -223,17 +180,6 @@ const AddUser = () => {
         value={password}
         onBlur={() => validatePassword(password, 6, setPasswordError)} />
         <div className={styles.errorMessage}>{passwordError}</div>
-
-      <Select
-        items={schoolItems}
-        title={title}
-        name="name"
-        onChange={handleSchool}
-        styles={selectStyle}
-        value={selectedSchool}
-        onBlur={() => validateSelected(selectedSchool, "0")}
-      />
-      <div className={styles.errorMessage}>{schoolError}</div>
 
       <div className={styles.btnContainer}>
         <Button title="Clear" styles={cancelBtnStyle} click={handleClear} />

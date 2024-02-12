@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const studentSlice = createSlice({
+export const userSlice = createSlice({
   name: 'student',
   initialState: {
     value: false
@@ -16,6 +16,6 @@ export const studentSlice = createSlice({
   }
 });
 
-export const { displayAddPanel, hideAddPanel } = studentSlice.actions;
+export const { displayAddPanel, hideAddPanel } = userSlice.actions;
 
-export default studentSlice.reducer;
+export default userSlice.reducer;

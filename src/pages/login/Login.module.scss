@@ -1,3 +1,30 @@
+@import '../../App.scss';
+
 .container {
-    background: blue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    input {
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .error {
+        color: red;
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .submitError {
+        color: red;
+        margin-top: 10px;
+    }
 }

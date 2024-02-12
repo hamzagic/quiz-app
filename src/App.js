@@ -1,32 +1,34 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/login/Login';
 import Quiz from './pages/quiz/Quiz';
 import Profile from './pages/profile/Profile';
 import Users from './pages/users/Users';
-import School from './pages/school/School';
-import Staff from './pages/staff/Staff';
 import CreateQuiz from './pages/quiz/create/CreateQuiz';
-import Header from './components/header/Header'
+import Header from './components/header/Header';
 
 import './App.scss';
 
 function App() {
-  // todo: hide header on login/signup pages
-  return (
-    <div className="App">
+  const loggedInUser = Cookies.get('token');
+  if (loggedInUser && loggedInUser.length > 0) {
+    return(
+      <div className="App">
       <Header />
-      <Route exact path="/" component={Dashboard} />
-      <Route path="/login" component={Login} />
+      <Route exact path="/dashboard" component={Dashboard} />
       <Route path="/profile" component={Profile} />
       <Route exact path="/quiz" component={Quiz} />
       <Route path="/users" component={Users} />
-      <Route path="/school" component={School} />
-      <Route path="/staff" component={Staff} />
       <Route path="/quiz/create" component={CreateQuiz} />
     </div>
-  );
+    );
+  } else {
+    return(
+      <Route to="/login" component={Login} />
+    );
+  }
 }
 
 export default App;
