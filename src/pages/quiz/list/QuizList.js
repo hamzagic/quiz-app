@@ -8,6 +8,8 @@ import { apiConstants } from '../../../constants/constants';
 import API from '../../../routes/api';
 import bt from '../../../components/buttons/BtnPrimary.module.scss';
 import QuizDetails from '../details/QuizDetails';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 const QuizList = () => {
   const [quizList, setQuizList] = useState([]);
@@ -16,10 +18,12 @@ const QuizList = () => {
   const showPanel = useSelector((state) => state.quiz.value);
   const dispatch = useDispatch();
   const userId = '65c987ccee9f842f1c8f2480';
+  const token = Cookies.get('token');
+  const decoded = jwtDecode(token);
 
   useEffect(() => {
     const fetchData = async () => {
-      await API.get('quiz/' + userId)
+      await API.get('quiz/' + decoded.id)
         .then((res) => {
           console.log("result", res);
           setQuizList(res.data.data);
@@ -60,7 +64,7 @@ const QuizList = () => {
 
   return (
     <div className={styles.container}>
-      {!showPanel && (
+      {!showPanel && quizList.length > 0 && (
         <>
         {/* todo: create a filter  for active and inactive quizzes */}
           {/* <div className={styles.btnContainers}>
@@ -111,6 +115,7 @@ const QuizList = () => {
         </>
       )}
       {showPanel && <QuizDetails id={id} />}
+      {quizList.length === 0 && <h2>No Quizzes Found</h2>}
     </div>
   );
 };
