@@ -224,11 +224,11 @@ const CreateQuiz = () => {
             <Input type="number" min="1" styles={inputStyle} value={questionsPerPage} onChange={handleQuestionsPage} />
           </div> */}
 
-          <div className={styles.checkboxContainer}>
+          {/* <div className={styles.checkboxContainer}>
             <span>Back Button:</span>
             <div className={styles.checkbox}><input type="checkbox" value={hasBackButton} onChange={handleBackButton} /></div>
-          </div>
-          <div className={[styles.calendarContainer, 'mt-10', 'mb-10'].join(' ')}>
+          </div> */}
+          {/* <div className={[styles.calendarContainer, 'mt-10', 'mb-10'].join(' ')}>
             <div>Start/End Dates: </div>
             {startDate && endDate && 
             <div>{startDate} - {endDate}</div>}
@@ -245,7 +245,7 @@ const CreateQuiz = () => {
                 onChange={handleDateRange}
                 title="Start/End Dates" />
             </Modal>
-          </div>
+          </div> */}
           <div className={styles.btnContainer}>
             <Button title="Cancel" styles={btnCancelStyle} click={handleCancelClick} />
             <Button title="Create" styles={hasErrors? btnDisabled : btnCreateStyle} click={handleCreateClick} disabled={hasErrors} />

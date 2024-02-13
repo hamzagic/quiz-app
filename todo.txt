@@ -1,1 +1,14 @@
 In quizzes list, create filters for active, inactive, date created, date updated, etc.
+
+Refactor new quiz form.
+
+A user can only see:
+Dashboard
+Quizzes
+Profile
+
+The admin can see:
+Dashboard - with consolidated data from all users.
+Quizzes - lists all quizzes from all users.
+Users
+Profile

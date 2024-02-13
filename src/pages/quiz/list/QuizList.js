@@ -17,7 +17,6 @@ const QuizList = () => {
   const [id, setId] = useState('');
   const showPanel = useSelector((state) => state.quiz.value);
   const dispatch = useDispatch();
-  const userId = '65c987ccee9f842f1c8f2480';
   const token = Cookies.get('token');
   const decoded = jwtDecode(token);
 
