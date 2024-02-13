@@ -5,6 +5,7 @@ import Input from '../../components/input/Input';
 import Button from '../../components/button/Button';
 import Validator from '../../utils/validator';
 import client from '../../routes/api';
+import Header from '../../components/header/Header';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -77,6 +78,8 @@ const Login = () => {
     }
 
     return(
+        <>
+        <Header />
         <div className={styles.container}>
             <div className={styles.formContainer}>
                 <h1>{title}</h1>
@@ -88,6 +91,7 @@ const Login = () => {
                 {submitError && <p className={styles.submitError}>{submitError}</p>}
             </div>
         </div>
+        </>
     );
 }
 

@@ -38,8 +38,8 @@ const Profile = () => {
 
   const handleLogout = () => {
     console.log("clicked");
-    // Cookies.remove('token');
-    // window.location.href = '/login';
+    Cookies.remove('token');
+    window.location.href = '/login';
   };
 
   const handleEditProfile = () => {
@@ -115,6 +115,7 @@ const Profile = () => {
             setSubmitError(res.data.error);
             return;
           }
+          setSubmitError('');
           setIsModalOpen(false);
         })
         .catch((err) => {
