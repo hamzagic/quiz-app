@@ -5,6 +5,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 50%;
+    margin: 0 auto;
 }
 
 .formContainer {
@@ -12,9 +14,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
     input {
         border-radius: 6px;
         border: 1px solid #ccc;
+        width: 100% !important;
     }
 
     .error {
