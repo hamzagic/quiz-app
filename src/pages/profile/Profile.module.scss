@@ -77,6 +77,17 @@
     margin-bottom: -16px;
   }
 
+  .errorMessage, .errorSubmitMessage {
+    margin-top: -8px;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+    color: red;
+  }
+
+  .errorSubmitMessage {
+    margin-top: 2px;
+    text-align: center;
+  }
 }
 
 .modalBlocker {

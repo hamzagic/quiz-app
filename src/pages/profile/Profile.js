@@ -6,6 +6,8 @@ import styles from "./Profile.module.scss";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import API from "../../routes/api";
+import Validator from "../../utils/validator";
+import client from '../../routes/api';
 
 const Profile = () => {
   const token = Cookies.get("token");
@@ -17,6 +19,7 @@ const Profile = () => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +27,7 @@ const Profile = () => {
         .then((res) => {
           setEmail(res.data.data.email);
           setUsername(res.data.data.username);
+          setPassword(res.data.data.password);
         })
         .catch((err) => {
           console.log("ERROR! ", err);
@@ -42,12 +46,82 @@ const Profile = () => {
     setIsModalOpen(true);
   };
 
-  const handleUsername = (e) => {};
-  const handleEmail = (e) => {};
-  const handlePassword = (e) => {};
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+  };
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const validateFields = () => {
+    let errors = true;
+    const validator = new Validator();
+    const isInvalidEmail = validator.email(email);
+    const isInvalidPassword = validator.required(password);
+    const isInvalidUsername = validator.required(username);
+
+    if (isInvalidPassword) {
+      setPasswordError(isInvalidPassword);
+    } else {
+      setPasswordError("");
+    }
+
+    if (isInvalidEmail) {
+      setEmailError(isInvalidEmail);
+    } else {
+      setEmailError("");
+    }
+
+    if (isInvalidUsername) {
+      setUsernameError(isInvalidUsername);
+    } else {
+      setUsernameError("");
+    }
+
+    if (
+      isInvalidEmail === undefined &&
+      isInvalidPassword === undefined &&
+      isInvalidUsername === undefined
+    ) {
+      errors = false;
+    } else {
+      errors = true;
+    }
+
+    return errors;
+  };
 
   const submitEditProfile = (e) => {
-    setIsModalOpen(false);
+    console.log("clicked");
+    const hasErrors = validateFields();
+    console.log(hasErrors);
+    if (!hasErrors) {
+      const data = {
+        id: decoded.id,
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      client
+        .post("/user/update", data)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.error) {
+            console.log('has errors');
+            setSubmitError(res.data.error);
+            return;
+          }
+          setIsModalOpen(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    
   };
 
   const closeModal = () => {
@@ -120,7 +194,8 @@ const Profile = () => {
             <div className={styles.gridData}>
               <p>{username}</p>
               <p>{email}</p>
-              <p>******</p>
+              {/* <p>{password}</p> */}
+              <p>*******</p>
             </div>
           </div>
           <div className={styles.editContainer}>
@@ -138,7 +213,7 @@ const Profile = () => {
       {/* Edit Profile Modal */}
       {isModalOpen && (
         <>
-        <div className={styles.modalBlocker}></div>
+          <div className={styles.modalBlocker}></div>
           <div className={styles.modalContainer}>
             <div className={styles.modal}>
               <div className={styles.modalHeader}>
@@ -159,7 +234,7 @@ const Profile = () => {
                 <div className={styles.inputContainer}>
                   <div className={styles.itemText}>Email:</div>
                   <Input
-                    type="password"
+                    type="text"
                     placeholder={email}
                     onChange={handleEmail}
                     styles={inputStyles}
@@ -183,6 +258,7 @@ const Profile = () => {
                     click={submitEditProfile}
                   />
                 </div>
+                <div className={styles.errorSubmitMessage}>{submitError}</div>
               </div>
             </div>
           </div>
