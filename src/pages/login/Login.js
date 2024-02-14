@@ -14,58 +14,68 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
+  useEffect(() => {
+  }, [email, password]);
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
-  const handleSubmit = () => {
-    console.log("submit clicked");
+
+  const validateFields = () => {
     const validator = new Validator();
     const isInvalidEmail = validator.email(email);
-    if (isInvalidEmail) {
-      setEmailError(isInvalidEmail);
-    }
     const isInvalidPassword = validator.required(password);
+    // setPasswordError('');
+    // setEmailError('');
+    // setSubmitError('');
     if (isInvalidPassword) {
       setPasswordError(isInvalidPassword);
     } else {
       setPasswordError("");
     }
-
     if (isInvalidEmail) {
       setEmailError(isInvalidEmail);
     } else {
       setEmailError("");
     }
 
-    console.log("emailError", emailError.length);
-    console.log("pwdError", passwordError.length);
+    let errors = true;
 
-    if (emailError.length === 0 && passwordError.length === 0) {
-      console.log("submitting form");
-      const data = {
-        email: email,
-        password: password,
-      };
-
-      client
-        .post("/user/login", data)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.error) {
-            setSubmitError(res.data.error);
-            return;
-          }
-
-          Cookies.set("token", res.data.token);
-          window.location.href = "/dashboard";
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    if (isInvalidEmail === undefined && isInvalidPassword === undefined) {
+      errors = false;
+    } else {
+      errors = true;
     }
+
+    return errors;
+  };
+  const handleSubmit = () => {
+    const hasErrors = validateFields();
+
+    if (hasErrors) return;
+
+    const data = {
+      email: email,
+      password: password,
+    };
+
+    client
+      .post("/user/login", data)
+      .then((res) => {
+        if (res.data.error) {
+          setSubmitError(res.data.error);
+          return;
+        }
+
+        Cookies.set("token", res.data.token);
+        window.location.href = "/dashboard";
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const title = "Login";
 
@@ -81,8 +91,7 @@ const Login = () => {
   };
 
   const inputStyles = {
-    padding: "5px",
-    marginBottom: "10px",
+    padding: "8px",
   };
 
   return (

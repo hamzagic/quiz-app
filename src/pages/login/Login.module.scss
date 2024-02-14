@@ -18,13 +18,12 @@
     input {
         border-radius: 6px;
         border: 1px solid #ccc;
-        width: 100% !important;
+        width: 30vw;
     }
 
     .error {
         color: red;
-        width: 100%;
-        padding: 0 10px;
+        padding: 4px 10px;
     }
 
     .submitError {
