@@ -1,0 +1,31 @@
+.questionsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .questions {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 20px;
+    width: 30vw;
+    margin-top: 30px;
+
+    textarea {
+      width: 100%;
+      resize: none;
+    }
+  }
+}
+
+.alternativesContainer {
+  display: flex;
+  flex-direction: column;
+
+  .alternatives {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 6px;
+  }
+}
