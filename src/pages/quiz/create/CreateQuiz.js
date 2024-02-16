@@ -11,6 +11,7 @@ import { apiConstants } from "../../../constants/constants";
 import Validator from "../../../utils/validator";
 import DateFormatter from "../../../utils/dateFormatter";
 import Question from "../../../components/question/Question";
+import { FaAngleLeft } from "react-icons/fa";
 
 const CreateQuiz = () => {
   const [startDate, setStartDate] = useState("");
@@ -25,7 +26,7 @@ const CreateQuiz = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [startDateError, setStartDateError] = useState("");
   const [nameError, setNameError] = useState("");
-  const [questions, setQuestions] = useState([]);
+  const [showQuestions, setShowQuestions] = useState(false);
 
   const history = useHistory();
 
@@ -42,33 +43,23 @@ const CreateQuiz = () => {
     isPast ? setStartDateError(isPast) : setStartDateError("");
   };
 
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-    },
-  };
-
   const btnCreateStyle = {
     border: "none",
     background: "#6622CC",
     color: "#fff",
-    padding: "10px",
+    padding: "4px",
     borderRadius: "5px",
     cursor: "pointer",
     fontWeight: "bold",
+    width: "120px",
+    maxWidth: "100%",
   };
 
   const btnCancelStyle = {
     border: "none",
-    background: "#FF0000",
-    color: "#fff",
-    padding: "10px",
-    borderRadius: "5px",
+    background: "none",
+    color: "#000",
+    paddingRight: "4px",
     cursor: "pointer",
     fontWeight: "bold",
   };
@@ -92,6 +83,28 @@ const CreateQuiz = () => {
     padding: "10px 15px",
     borderRadius: "5px",
     cursor: "no-drop",
+  };
+
+  const nameStyles = {
+    border: "1px solid #ccc",
+  };
+
+  const nextStyles = {
+    background: "#6622CC",
+    border: "none",
+    borderRadius: "6px",
+    color: "#fff",
+    padding: "4px 12px",
+    cursor: "pointer",
+  };
+
+  const finishStyles = {
+    background: "#3f51b5",
+    border: "none",
+    borderRadius: "6px",
+    color: "#fff",
+    padding: "4px 12px",
+    cursor: "pointer",
   };
 
   const handleCreateClick = async () => {
@@ -124,7 +137,8 @@ const CreateQuiz = () => {
   };
 
   const handleCancelClick = () => {
-    history.goBack();
+    setShowQuestions(false);
+    history.push("/quiz");
   };
 
   const handleDateRange = (e) => {
@@ -168,8 +182,20 @@ const CreateQuiz = () => {
   };
 
   const handleNextClick = (data) => {
-    setQuestions([...questions, data]);
+    // check if quiz name is valid
+    // check if image has been added
+    // open question component
+    setShowQuestions(true);
   };
+
+  const handleNextQuestion = () => {
+    // save current question/choices data
+    // reset component to display the next question form
+  }
+
+  const handlePreviousQuestion = () => {
+    
+  }
 
   const errorFields = startDateError || nameError;
 
@@ -178,14 +204,25 @@ const CreateQuiz = () => {
   return (
     <div>
       <div className={styles.container}>
-        <h1>Create a New Quiz</h1>
+        <div className={styles.headerContainer}>
+          <div className={styles.backContainer} onClick={handleCancelClick}>
+            <FaAngleLeft />
+            <Button
+              title="Back"
+              styles={btnCancelStyle}
+              click={handleCancelClick}
+            />
+          </div>
+          <h1>Create a New Quiz</h1>
+        </div>
         <div className={styles.card}>
           <div className={styles.message}>{message}</div>
           <div className={styles.errorMessage}>{errorMsg}</div>
           <div className={styles.inputGrid}>
             <div className={styles.titles}>
               <div>Quiz Name: </div>
-              <div>Image: </div>
+              <div></div>
+              <div>Image (optional): </div>
             </div>
             <div className={styles.descriptions}>
               <Input
@@ -194,29 +231,11 @@ const CreateQuiz = () => {
                 onChange={handleName}
                 onBlur={() => validateField(name, 6, setNameError)}
               />
-              <Input
-                placeholder="Name"
-                type="file"
-                // styles={inputName}
-                // value={name}
-                // onChange={handleName}
-                // onBlur={() => validateField(name, 6, setNameError)}
-              />
+              <div className={styles.errorMessage}>{nameError}</div>
+              <Input placeholder="Name" type="file" />
             </div>
-            <div className={styles.errorMessage}>{nameError}</div>
           </div>
           <div className={styles.btnContainer}>
-            <Button
-              title="Cancel"
-              styles={btnCancelStyle}
-              click={handleCancelClick}
-            />
-            {/* <Button
-              title="Create"
-              styles={hasErrors ? btnDisabled : btnCreateStyle}
-              click={handleCreateClick}
-              disabled={hasErrors}
-            /> */}
             <Button
               title="Next"
               styles={hasErrors ? btnDisabled : btnCreateStyle}
@@ -225,7 +244,16 @@ const CreateQuiz = () => {
             />
           </div>
         </div>
-        <Question />
+        {showQuestions && (
+          <>
+            <Question />
+            <div className={styles.buttonsContainer}>
+              <Button title="Previous Question" styles={nextStyles} click={handlePreviousQuestion} />
+              <Button title="Next Question" styles={nextStyles} click={handleNextQuestion} />
+              <Button title="Finish Quiz" styles={finishStyles} />
+            </div>
+          </>
+        )}
       </div>
       <Sidebar />
     </div>

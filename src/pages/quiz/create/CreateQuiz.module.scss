@@ -3,6 +3,33 @@
     position: relative;
 }
 
+.headerContainer {
+  width: 30vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+
+  .backContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 0 0 5%;
+  }
+
+  svg {
+    cursor: pointer;
+  }
+
+  svg:hover, button:hover {
+    opacity: .5;
+  }
+
+  h1 {
+    flex: 0 0 90%;
+  }
+}
+
 .card {
   border: 1px solid #ccc;
   width: 30vw;
@@ -13,11 +40,9 @@
 }
 
 .btnContainer {
-    width: 9vw;
-    max-width: 100%;
     display: flex;
-    justify-content: space-between;
-    margin: 0 auto;
+    justify-content: center;
+    margin-top: 12px;
 }
 
 .inputContainer {
@@ -42,12 +67,10 @@
     justify-content: center;
     row-gap: 10px;
   }
+}
 
-  input {
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 5px;
-  }
+.descriptions {
+ 
 }
 
 .message {
@@ -58,7 +81,6 @@
 .errorMessage {
   font-size: 14px;
   color: red;
-  margin-bottom: 5px;
 }
 
 .days {
@@ -113,4 +135,12 @@ $font-color: #000;
 .closeBtn {
   cursor: pointer;
   text-align: right;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 12px;
+  margin-top: 12px;
 }
