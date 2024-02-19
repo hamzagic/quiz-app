@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addQuestionText, addNumberOfChoices, addChoices, setCorrectChoiceIndex } from '../../store/reducers/createQuizReducer';
+import { 
+  addQuestionText, 
+  addNumberOfChoices, 
+  addChoices, 
+  setCorrectChoiceIndex
+} from '../../store/reducers/createQuizReducer';
 import styles from './Question.module.scss';
 import Choice from '../choices/Choice';
 import Input from '../input/Input';
@@ -12,8 +17,15 @@ const Question = () => {
   const [correctAnswer, setCorrectAnswer] = useState(0);
   const dispatch = useDispatch();
   const [choiceTexts, setChoiceTexts] = useState([]);
-  const questionNumber = useSelector(state => state.createQuiz.currentQuestionNumber)
+  const questionNumber = useSelector(state => state.createQuiz.currentQuestionNumber);
+  const questionText = useSelector(state => state.createQuiz.currentQuestionText);
+  const numberChoices = useSelector(state => state.createQuiz.numberOfChoices);
 
+  useEffect(() => {
+
+  }, [questionText, questionNumber, numberChoices]);
+
+  // todo: add ability to delete a question previously entered
 
   const handleChoiceTextChange = (index, e) => {
     setChoiceTexts(prevChoiceTexts => {
@@ -53,14 +65,11 @@ const Question = () => {
           rows='3'
           placeholder='Type your question...'
           onChange={handleQuestionText}
+          value={questionText}
         ></textarea>
         <div className={styles.choicesContainer}>
           <div className={styles.choices}>
             <span>Number of choices:</span>
-            <div className={styles.choiceItem}>
-              <label htmlFor='1'>1</label>
-              <input type='radio' value='1' name='alternatives' onChange={handleChoiceQty} />
-            </div>
             <div className={styles.choiceItem}>
               <label htmlFor='2'>2</label>
               <input type='radio' value='2' name='alternatives' onChange={handleChoiceQty} />
@@ -79,8 +88,8 @@ const Question = () => {
             </div>
           </div>
         </div>
-        {choiceQty > 0 && <div>Choices:</div>}
-        {choiceQty > 0 && 
+        {numberChoices > 0 && <div>Choices:</div>}
+        {numberChoices > 0 && 
           Array.from({length: choiceQty }).map((_, index) => 
           <Choice key={index} change={(e) => handleChoiceTextChange(index, e)} checked={(e) => handleCorrectChecked(index)} />)
         }

@@ -2,18 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const createQuizSlice = createSlice({
   name: 'createQuiz',
+  // initialState: {},
   initialState: {
     quizName: '',
     quizImage: '',
     questions: [
-      {
-        questionNumber: 0,
-        questionText: '',
-        numberOfChoices: 0,
-        questionImage: '',
-        choices: [],
-        correctChoice: 0
-      }
+      // {
+      //   questionNumber: 0,
+      //   questionText: '',
+      //   numberOfChoices: 0,
+      //   questionImage: '',
+      //   choices: [],
+      //   correctChoice: 0
+      // }
     ],
   },
   reducers: {
@@ -40,6 +41,9 @@ export const createQuizSlice = createSlice({
     },
     setCorrectChoiceIndex: (state, action) => {
       state.correctChoiceIndex = action.payload
+    },
+    resetQuestionComponent: (state, action) => {
+      state.shouldReset = action.payload;
     }
   }
 });
@@ -52,7 +56,8 @@ export const {
   addNumberOfChoices, 
   currentQuestionNumber, 
   addChoices, 
-  setCorrectChoiceIndex 
+  setCorrectChoiceIndex,
+  resetQuestionComponent, 
 } = createQuizSlice.actions;
 
 export default createQuizSlice.reducer;

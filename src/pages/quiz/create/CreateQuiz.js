@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
-import { addQuizName, currentQuestionNumber } from "../../../store/reducers/createQuizReducer";
+import { useSelector, useDispatch, useStore } from 'react-redux';
+import { 
+  addQuizName, 
+  currentQuestionNumber, 
+  addQuestion, 
+  resetQuestionComponent,
+  addQuestionText, 
+  addNumberOfChoices, 
+  addChoices, 
+  setCorrectChoiceIndex } from "../../../store/reducers/createQuizReducer";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import styles from "./CreateQuiz.module.scss";
 import Input from "../../../components/input/Input";
@@ -22,17 +30,30 @@ const CreateQuiz = () => {
   const [showQuestions, setShowQuestions] = useState(false);
   const dispatch = useDispatch();
   const quizName = useSelector(state => state.createQuiz.quizName);
-  const currentQuestion = useSelector(state => state.createQuiz.currentQuestionText);
+  const currentQNumber = useSelector(state => state.createQuiz.currentQuestionNumber);
+  const currentQuestionText = useSelector(state => state.createQuiz.currentQuestionText);
   const currentChoices = useSelector(state => state.createQuiz.choices);
   const currentCorrectChoice = useSelector(state => state.createQuiz.correctChoiceIndex);
+  const numberOfChoices = useSelector(state => state.createQuiz.addNumberOfChoices);
+  const mustReset = useSelector(state => state.createQuiz.shouldReset);
 
-  const quizObject = {
-    quizName: '',
-    quizImage: '',
-    questions: [],
-  }
+  useEffect(() => {
+    if(mustReset) {
+      console.log('reset')
+      dispatch(addQuestionText(''));
+      dispatch(addNumberOfChoices(0));
+    } 
+  },[mustReset, dispatch])
+  // const quizObject = {
+  //   quizName: '',
+  //   quizImage: '',
+  //   questions: [],
+  // }
 
   const history = useHistory();
+
+  const store = useStore().getState();
+  const shouldReset = store.createQuiz.shouldReset;
 
   const btnCreateStyle = {
     border: "none",
@@ -133,22 +154,31 @@ const CreateQuiz = () => {
     dispatch(addQuizName(name));
     dispatch(currentQuestionNumber(1));
     setShowQuestions(true);
-    quizObject.quizName = name;
-    localStorage.setItem('quiz', JSON.stringify(quizObject));
   };
 
   const handleNextQuestion = () => {
-    console.log('quiz name', quizName);
-    console.log('question', currentQuestion);
-    console.log('choices', currentChoices);
-    console.log('correct', currentCorrectChoice);
+    // console.log('quiz name', quizName);
+    // console.log('question', currentQuestionText);
+    // console.log('choices', currentChoices);
+    // console.log('correct', currentCorrectChoice);
+    const currentQuestion = {
+      questionNumber: currentQNumber,
+      questionText: currentQuestionText,
+      numberOfChoices: numberOfChoices,
+      choices: currentChoices,
+      correctChoice: currentCorrectChoice,
+      questionImage: ''
+    }
     // save current question/choices data
-    // 
+    dispatch(addQuestion(addQuestion(currentQuestion)));
+    dispatch(currentQuestionNumber(currentQNumber + 1));
     // reset component to display the next question form
+    dispatch(resetQuestionComponent(true));
+    // or display the next question in the array, if it exists
   }
 
   const handlePreviousQuestion = () => {
-
+    // load previous question based on the store
   }
 
   const errorFields = nameError;
