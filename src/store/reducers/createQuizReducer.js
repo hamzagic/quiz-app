@@ -11,12 +11,8 @@ export const createQuizSlice = createSlice({
         questionText: '',
         numberOfChoices: 0,
         questionImage: '',
-        choices: [
-          {
-            choiceText: '',
-            isCorrect: false
-          }
-        ]
+        choices: [],
+        correctChoice: 0
       }
     ],
   },
@@ -29,10 +25,34 @@ export const createQuizSlice = createSlice({
     },
     addQuestion: (state, action) => {
       state.questions = [...state.questions, action.payload]
+    },
+    addQuestionText: (state, action) => {
+      state.currentQuestionText = action.payload
+    },
+    addNumberOfChoices: (state, action) => {
+      state.numberOfChoices = action.payload
+    },
+    currentQuestionNumber: (state, action) => {
+      state.currentQuestionNumber = action.payload
+    },
+    addChoices: (state, action) => {
+      state.choices = action.payload
+    },
+    setCorrectChoiceIndex: (state, action) => {
+      state.correctChoiceIndex = action.payload
     }
   }
 });
 
-export const { addQuizName, addQuizImage, addQuestion } = createQuizSlice.actions;
+export const { 
+  addQuizName, 
+  addQuizImage, 
+  addQuestion, 
+  addQuestionText, 
+  addNumberOfChoices, 
+  currentQuestionNumber, 
+  addChoices, 
+  setCorrectChoiceIndex 
+} = createQuizSlice.actions;
 
 export default createQuizSlice.reducer;

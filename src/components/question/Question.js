@@ -1,81 +1,42 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addQuestion } from '../../store/reducers/createQuizReducer';
+import { addQuestionText, addNumberOfChoices, addChoices, setCorrectChoiceIndex } from '../../store/reducers/createQuizReducer';
 import styles from './Question.module.scss';
 import Choice from '../choices/Choice';
-import Button from '../button/Button';
 import Input from '../input/Input';
 
 const Question = () => {
   const [question, setQuestion] = useState('');
-  const [questionNumber, setQuestionNumber] = useState(1);
   const [image, setImage] = useState(null);
-  const [choiceText, setChoiceText] = useState('');
   const [choiceQty, setChoiceQty] = useState(0);
-  const [choices, setChoices] = useState([]);
-  const [correctAnswer, setCorrectAnswer] = useState('');
+  const [correctAnswer, setCorrectAnswer] = useState(0);
   const dispatch = useDispatch();
-  const [questionObject, setQuestionObject] = useState({});
-  const [choicesObject, setChoicesObject] = useState({});
+  const [choiceTexts, setChoiceTexts] = useState([]);
+  const questionNumber = useSelector(state => state.createQuiz.currentQuestionNumber)
 
-  // const questionObject = {
-  //   questionNumber: null,
-  //   questionText: '',
-  //   numberOfChoices: null,
-  //   questionImage: '',
-  //   choices: [
-  //     // {
-  //     //   choiceText: '',
-  //     //   isCorrect: false,
-  //     // },
-  //   ],
-  // };
+
+  const handleChoiceTextChange = (index, e) => {
+    setChoiceTexts(prevChoiceTexts => {
+      const updatedChoiceTexts = [...prevChoiceTexts];
+      updatedChoiceTexts[index] = e.target.value;
+      return updatedChoiceTexts;
+    });
+    dispatch(addChoices(choiceTexts));
+  };
 
   const handleQuestionText = (e) => {
     setQuestion(e.target.value);
-    const updatedQuestionObject = {
-      ...questionObject,
-      questionText: question,
-      questionNumber: 1
-    }
-    setQuestionObject(updatedQuestionObject);
-    // todo: check 'quiz' localStorage to get the question number
+    dispatch(addQuestionText(e.target.value));
   };
 
   const handleChoiceQty = (e) => {
     setChoiceQty(e.target.value);
-    const updatedQuestionObject = {
-      ...questionObject,
-      numberOfChoices: parseInt(e.target.value)
-    }
-    setQuestionObject(updatedQuestionObject);
+    dispatch(addNumberOfChoices(e.target.value));
   }
 
-  const handleChoiceText = (e) => {
-    setChoiceText(e.target.value);
-  };
-
-  const handleCorrectChecked = (e) => {
-    setCorrectAnswer(e.target.checked);
-  };
-
-  const handleDeleteChoice = () => {
-
-  };
-
-  const handleAddChoice = () => {
-    const updatedChoicesObject = {
-      ...choicesObject,
-      choiceText,
-      isCorrect: correctAnswer
-    }
-    setChoicesObject(updatedChoicesObject);
-    const updatedQuestionObject = {
-      ...questionObject,
-      choices: updatedChoicesObject,
-    }
-    setQuestionObject(updatedQuestionObject);
-    localStorage.setItem('question', JSON.stringify(updatedQuestionObject));
+  const handleCorrectChecked = (index) => {
+    setCorrectAnswer(index);
+    dispatch(setCorrectChoiceIndex(index));
   };
 
   return (
@@ -118,14 +79,11 @@ const Question = () => {
             </div>
           </div>
         </div>
-        <div>Choices:</div>
-        <Choice
-          text={choiceText}
-          change={handleChoiceText}
-          checked={handleCorrectChecked}
-          deleteChoice={handleDeleteChoice}
-          addChoice={handleAddChoice}
-        />
+        {choiceQty > 0 && <div>Choices:</div>}
+        {choiceQty > 0 && 
+          Array.from({length: choiceQty }).map((_, index) => 
+          <Choice key={index} change={(e) => handleChoiceTextChange(index, e)} checked={(e) => handleCorrectChecked(index)} />)
+        }
       </div>
     </div>
   );

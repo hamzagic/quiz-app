@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { addQuizName } from "../../../store/reducers/createQuizReducer";
+import { addQuizName, currentQuestionNumber } from "../../../store/reducers/createQuizReducer";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import styles from "./CreateQuiz.module.scss";
 import Input from "../../../components/input/Input";
 import Button from "../../../components/button/Button";
-// import CalendarComponent from "../../../components/calendar/CalendarComponent";
 import API from "../../../routes/api";
 import { apiConstants } from "../../../constants/constants";
 import Validator from "../../../utils/validator";
-import DateFormatter from "../../../utils/dateFormatter";
 import Question from "../../../components/question/Question";
 import { FaAngleLeft } from "react-icons/fa";
 
@@ -24,6 +22,9 @@ const CreateQuiz = () => {
   const [showQuestions, setShowQuestions] = useState(false);
   const dispatch = useDispatch();
   const quizName = useSelector(state => state.createQuiz.quizName);
+  const currentQuestion = useSelector(state => state.createQuiz.currentQuestionText);
+  const currentChoices = useSelector(state => state.createQuiz.choices);
+  const currentCorrectChoice = useSelector(state => state.createQuiz.correctChoiceIndex);
 
   const quizObject = {
     quizName: '',
@@ -83,14 +84,9 @@ const CreateQuiz = () => {
 
   const handleCreateClick = async () => {
     if (hasErrors) return;
-    const formattedStartDate = DateFormatter(startDate);
-    const formattedEndDate = DateFormatter(endDate);
     setErrorMsg("");
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("start_date", formattedStartDate);
-    formData.append("end_date", formattedEndDate);
-    formData.append("questions_per_page", 1);
     await API.post(apiConstants.quiz_post, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -135,12 +131,17 @@ const CreateQuiz = () => {
     // check if image has been added
     // open question component
     dispatch(addQuizName(name));
+    dispatch(currentQuestionNumber(1));
     setShowQuestions(true);
     quizObject.quizName = name;
     localStorage.setItem('quiz', JSON.stringify(quizObject));
   };
 
   const handleNextQuestion = () => {
+    console.log('quiz name', quizName);
+    console.log('question', currentQuestion);
+    console.log('choices', currentChoices);
+    console.log('correct', currentCorrectChoice);
     // save current question/choices data
     // 
     // reset component to display the next question form
