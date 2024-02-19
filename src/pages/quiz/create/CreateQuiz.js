@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch, useStore } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { 
   addQuizName, 
   currentQuestionNumber, 
@@ -44,16 +44,8 @@ const CreateQuiz = () => {
       dispatch(addNumberOfChoices(0));
     } 
   },[mustReset, dispatch])
-  // const quizObject = {
-  //   quizName: '',
-  //   quizImage: '',
-  //   questions: [],
-  // }
 
   const history = useHistory();
-
-  const store = useStore().getState();
-  const shouldReset = store.createQuiz.shouldReset;
 
   const btnCreateStyle = {
     border: "none",
@@ -80,9 +72,11 @@ const CreateQuiz = () => {
     border: "none",
     background: "#ccc",
     color: "#fff",
-    padding: "10px 15px",
+    padding: "4px",
     borderRadius: "5px",
     cursor: "no-drop",
+    width: "120px",
+    maxWidth: "100%",
   };
 
   const nextStyles = {
@@ -157,10 +151,6 @@ const CreateQuiz = () => {
   };
 
   const handleNextQuestion = () => {
-    // console.log('quiz name', quizName);
-    // console.log('question', currentQuestionText);
-    // console.log('choices', currentChoices);
-    // console.log('correct', currentCorrectChoice);
     const currentQuestion = {
       questionNumber: currentQNumber,
       questionText: currentQuestionText,
@@ -174,11 +164,17 @@ const CreateQuiz = () => {
     dispatch(currentQuestionNumber(currentQNumber + 1));
     // reset component to display the next question form
     dispatch(resetQuestionComponent(true));
+    resetQuestionFields();
     // or display the next question in the array, if it exists
   }
 
   const handlePreviousQuestion = () => {
     // load previous question based on the store
+  }
+
+  const resetQuestionFields = () => {
+    dispatch(addQuestionText(''));
+    dispatch(addNumberOfChoices(0));
   }
 
   const errorFields = nameError;
