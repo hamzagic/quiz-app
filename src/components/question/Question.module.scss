@@ -15,6 +15,13 @@
       width: 100%;
       resize: none;
     }
+
+    .questionHeader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
   }
 }
 
@@ -67,4 +74,15 @@
   align-items: center;
   column-gap: 12px;
   margin-top: 12px;
+}
+
+.trashIcon {
+  position: absolute;
+  left: 99%;
+  transform: translateX(-99%);
+  cursor: pointer; 
+}
+
+.trashIcon:hover {
+  opacity: .6;
 }

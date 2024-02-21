@@ -8,12 +8,12 @@ export const createQuizSlice = createSlice({
     quizImage: '',
     questions: [
       // {
-      //   questionNumber: 0,
+      //   questionNumber: '',
       //   questionText: '',
-      //   numberOfChoices: 0,
+      //   numberOfChoices: '',
       //   questionImage: '',
       //   choices: [],
-      //   correctChoice: 0
+      //   correctChoice: ''
       // }
     ],
   },

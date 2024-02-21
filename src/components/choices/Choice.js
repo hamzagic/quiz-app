@@ -13,7 +13,7 @@ const Choice = (props) => {
       </div>
       <div className={styles.correctContainer}>
         <label htmlFor="correct">Correct Answer?</label>
-        <input type="radio" onChange={props.checked} name="correct" />
+        <input type="radio" onChange={props.checked} name="alternatives" />
       </div>
     </div>
   );

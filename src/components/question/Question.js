@@ -9,20 +9,24 @@ import {
 import styles from './Question.module.scss';
 import Choice from '../choices/Choice';
 import Input from '../input/Input';
+import { FaRegTrashAlt } from "react-icons/fa";
+import { current } from '@reduxjs/toolkit';
 
 const Question = () => {
   const [question, setQuestion] = useState('');
   const [image, setImage] = useState(null);
   const [choiceQty, setChoiceQty] = useState(0);
   const [correctAnswer, setCorrectAnswer] = useState(0);
+  const [questionText, setQuestionText] = useState('');
   const dispatch = useDispatch();
   const [choiceTexts, setChoiceTexts] = useState([]);
   const questionNumber = useSelector(state => state.createQuiz.currentQuestionNumber);
-  const questionText = useSelector(state => state.createQuiz.currentQuestionText);
   const numberChoices = useSelector(state => state.createQuiz.numberOfChoices);
+  const questionTextStore = useSelector(state => state.createQuiz.currentQuestionText);
+  const currentChoices = useSelector(state => state.createQuiz.choices);
 
   useEffect(() => {
-
+    console.log('number of choices', numberChoices);
   }, [questionText, questionNumber, numberChoices]);
 
   // todo: add ability to delete a question previously entered
@@ -37,13 +41,14 @@ const Question = () => {
   };
 
   const handleQuestionText = (e) => {
-    setQuestion(e.target.value);
+    setQuestionText(e.target.value);
     dispatch(addQuestionText(e.target.value));
   };
 
   const handleChoiceQty = (e) => {
-    setChoiceQty(e.target.value);
-    dispatch(addNumberOfChoices(e.target.value));
+    const qty = parseInt(e.target.value);
+    setChoiceQty(qty);
+    dispatch(addNumberOfChoices(qty));
   }
 
   const handleCorrectChecked = (index) => {
@@ -54,7 +59,10 @@ const Question = () => {
   return (
     <div className={styles.questionsContainer}>
       <div className={styles.questions}>
-        <div>Question {questionNumber}:</div>
+        <div className={styles.questionHeader}>
+          <div>Question {questionNumber}:</div>
+          <FaRegTrashAlt className={styles.trashIcon} onClick={() => {}} />
+        </div>
         <div className={styles.imageContainer}>
           <span>Question image (optional):</span>
           <Input type='file' />
@@ -65,7 +73,7 @@ const Question = () => {
           rows='3'
           placeholder='Type your question...'
           onChange={handleQuestionText}
-          value={questionText}
+          value={questionTextStore}
         ></textarea>
         <div className={styles.choicesContainer}>
           <div className={styles.choices}>
@@ -80,7 +88,7 @@ const Question = () => {
             </div>
             <div className={styles.choiceItem}>
               <label htmlFor='4'>4</label>
-              <input type='radio' value='4' name='alternatives'  onChange={handleChoiceQty} />
+              <input type='radio' value='4' name='alternatives' onChange={handleChoiceQty} />
             </div>
             <div className={styles.choiceItem}>
               <label htmlFor='5'>5</label>
@@ -88,10 +96,15 @@ const Question = () => {
             </div>
           </div>
         </div>
-        {numberChoices > 0 && <div>Choices:</div>}
-        {numberChoices > 0 && 
-          Array.from({length: choiceQty }).map((_, index) => 
-          <Choice key={index} change={(e) => handleChoiceTextChange(index, e)} checked={(e) => handleCorrectChecked(index)} />)
+        {(numberChoices > 0 || (currentChoices && currentChoices.length > 0)) && <div>Choices:</div>}
+        {(numberChoices > 0 || (currentChoices && currentChoices.length > 0)) && 
+          Array.from({length: choiceQty || currentChoices.length }).map((_, index) => 
+          <Choice 
+            key={index} 
+            change={(e) => handleChoiceTextChange(index, e)} 
+            checked={() => handleCorrectChecked(index)} 
+            text={currentChoices ? currentChoices[index] : ''}
+          />)
         }
       </div>
     </div>
