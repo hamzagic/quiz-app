@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Choice.module.scss";
 
-const Choice = ({ index, text, change, checked }) => {
+const Choice = ({ index, text, change, checked, correct }) => {
   return (
     <div className={styles.alternativeContainer}>
       <div className={styles.alternative}>
@@ -9,7 +9,7 @@ const Choice = ({ index, text, change, checked }) => {
       </div>
       <div className={styles.correctContainer}>
         <label htmlFor={`correct-${index}`}>Correct Answer?</label>
-        <input type="radio" id={`correct-${index}`} onChange={checked} name="choices" />
+        <input type="radio" onChange={correct} name="choices" checked={checked} />
       </div>
     </div>
   );
