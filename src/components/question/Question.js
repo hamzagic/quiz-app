@@ -26,12 +26,12 @@ const Question = () => {
   const currentChoices = useSelector(state => state.createQuiz.choices);
 
   useEffect(() => {
-    console.log('number of choices', numberChoices);
   }, [questionText, questionNumber, numberChoices]);
 
   // todo: add ability to delete a question previously entered
 
   const handleChoiceTextChange = (index, e) => {
+    if (currentChoices) return;
     setChoiceTexts(prevChoiceTexts => {
       const updatedChoiceTexts = [...prevChoiceTexts];
       updatedChoiceTexts[index] = e.target.value;
@@ -103,7 +103,7 @@ const Question = () => {
             key={index} 
             change={(e) => handleChoiceTextChange(index, e)} 
             checked={() => handleCorrectChecked(index)} 
-            text={currentChoices ? currentChoices[index] : ''}
+            text={currentChoices && currentChoices[index]}
           />)
         }
       </div>

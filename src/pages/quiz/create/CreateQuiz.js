@@ -150,22 +150,37 @@ const CreateQuiz = () => {
   };
 
   const handleNextQuestion = () => {
-    const currentQuestion = {
-      questionNumber: currentQNumber,
-      questionText: currentQuestionText,
-      numberOfChoices: numberOfChoices,
-      choices: currentChoices,
-      correctChoice: currentCorrectChoice,
-      questionImage: ''
-    }
-    console.log(currentQuestion);
-    // save current question/choices data
-    dispatch(addQuestion(addQuestion(currentQuestion)));
-    dispatch(currentQuestionNumber(currentQNumber + 1));
-    // reset component to display the next question form
-    dispatch(resetQuestionComponent(true));
-    resetQuestionFields();  
-    // or display the next question in the array, if it exists
+    if (quizQuestions && quizQuestions.length > currentQNumber) {
+      // that means we have already a next question created
+      // we just need to load the data
+      console.log('next question exists');
+      const currentQuestion = quizQuestions.filter(question => {
+        if (question.payload.questionNumber === currentQNumber + 1) {
+          dispatch(currentQuestionNumber(currentQNumber + 1));
+          dispatch(addQuestionText(question.payload.questionText));
+          dispatch(addChoices(question.payload.choices));
+        }
+        return question.payload.questionNumber === currentQNumber + 1;
+      });
+      console.log(currentQuestion);
+    } else {
+      console.log('next question does not exist');
+      const currentQuestion = {
+        questionNumber: currentQNumber,
+        questionText: currentQuestionText,
+        numberOfChoices: numberOfChoices,
+        choices: currentChoices,
+        correctChoice: currentCorrectChoice,
+        questionImage: ''
+      }
+      console.log(currentQuestion);
+      // save current question/choices data
+      dispatch(addQuestion(addQuestion(currentQuestion)));
+      dispatch(currentQuestionNumber(currentQNumber + 1));
+      // reset component to display the next question form
+      dispatch(resetQuestionComponent(true));
+      resetQuestionFields(); 
+    } 
   }
 
   const handlePreviousQuestion = () => {
@@ -181,12 +196,14 @@ const CreateQuiz = () => {
         dispatch(addNumberOfChoices(question.payload.choices.numberOfChoices));
         return question.payload.questionNumber === currentQNumber - 1;
       }
+      return;
     });
   }
 
   const resetQuestionFields = () => {
     dispatch(addQuestionText(''));
     dispatch(addNumberOfChoices(0));
+    dispatch(addChoices([]));
   }
 
   const errorFields = nameError;
