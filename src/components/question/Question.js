@@ -36,6 +36,7 @@ const Question = () => {
       console.log('reset for new question');
       setQuestionText('');
       setChoices([]);
+      setChoiceQty(0);
     }
   }, [currentQNumber, questions]);
 
@@ -112,7 +113,7 @@ const Question = () => {
             ))}
           </div>
         </div>
-        <div>Choices:</div>
+        {choices.length > 0 && <div>Choices:</div>}
         {choices.map((choice, index) => (
         <Choice
           index={index}
