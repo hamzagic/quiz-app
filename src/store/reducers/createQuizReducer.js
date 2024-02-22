@@ -44,6 +44,9 @@ export const createQuizSlice = createSlice({
     },
     resetQuestionComponent: (state, action) => {
       state.shouldReset = action.payload;
+    },
+    deleteQuestion: (state, action) => {
+      state.questions = state.questions.filter(question => question.payload.questionNumber !== action.payload) 
     }
   }
 });
@@ -57,7 +60,8 @@ export const {
   currentQuestionNumber, 
   addChoices, 
   setCorrectChoiceIndex,
-  resetQuestionComponent, 
+  resetQuestionComponent,
+  deleteQuestion
 } = createQuizSlice.actions;
 
 export default createQuizSlice.reducer;

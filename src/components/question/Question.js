@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   addQuestionText, 
-  addNumberOfChoices, 
   addChoices, 
   setCorrectChoiceIndex,
-  addQuestion 
+  deleteQuestion,
+  currentQuestionNumber 
 } from '../../store/reducers/createQuizReducer';
 import styles from './Question.module.scss';
 import Choice from '../choices/Choice';
@@ -70,12 +70,24 @@ const Question = () => {
     setChoices(new Array(qty).fill(''));
   };
 
+  const handleDeleteQuestion = () => {
+    console.log(currentQNumber)
+    dispatch(deleteQuestion(currentQNumber));
+    if (currentQNumber > 1) {
+      dispatch(currentQuestionNumber(currentQNumber - 1));
+    } else if (questions.length > 1) {
+      dispatch(currentQuestionNumber(1));
+    } else {
+      console.log('no questions left');
+    }
+  }
+
   return (
     <div className={styles.questionsContainer}>
       <div className={styles.questions}>
         <div className={styles.questionHeader}>
           <div>Question {currentQNumber}:</div>
-          <FaRegTrashAlt className={styles.trashIcon} />
+          <FaRegTrashAlt className={styles.trashIcon} onClick={handleDeleteQuestion} />
         </div>
         <div className={styles.imageContainer}>
           <span>Question image (optional):</span>

@@ -179,10 +179,10 @@ const CreateQuiz = () => {
   }
 
   const handlePreviousQuestion = () => {
+    if (currentQNumber - 1 <= 0) return;
     dispatch(currentQuestionNumber(currentQNumber - 1));
     const previousQuestion = quizQuestions.filter(question => 
       question && question.payload && question.payload.questionNumber === currentQNumber - 1);
-    console.log('caralha', previousQuestion);
     
     dispatch(addQuestionText(previousQuestion && previousQuestion[0].payload.questionText));
     dispatch(addChoices(previousQuestion && previousQuestion[0].payload.choices));
