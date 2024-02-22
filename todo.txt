@@ -12,3 +12,5 @@ Dashboard - with consolidated data from all users.
 Quizzes - lists all quizzes from all users.
 Users
 Profile
+
+When quiz is created, generate a link to share with others.

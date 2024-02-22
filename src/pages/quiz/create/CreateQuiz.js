@@ -21,8 +21,6 @@ import Question from "../../../components/question/Question";
 import { FaAngleLeft } from "react-icons/fa";
 
 const CreateQuiz = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -135,8 +133,6 @@ const CreateQuiz = () => {
   };
 
   const clearFields = () => {
-    setStartDate("");
-    setEndDate("");
     setName("");
   };
 
@@ -145,7 +141,7 @@ const CreateQuiz = () => {
     // check if image has been added
     // open question component
     dispatch(addQuizName(name));
-    dispatch(currentQuestionNumber(1));
+    dispatch(currentQuestionNumber(currentQNumber ? parseInt(currentQNumber) + 1 : 1));
     setShowQuestions(true);
   };
 
@@ -159,10 +155,10 @@ const CreateQuiz = () => {
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.payload.questionText));
           dispatch(addChoices(question.payload.choices));
+          dispatch(setCorrectChoiceIndex(question.payload.correctChoiceIndex));
         }
         return question.payload.questionNumber === currentQNumber + 1;
       });
-      console.log(currentQuestion);
     } else {
       console.log('next question does not exist');
       const currentQuestion = {
@@ -173,7 +169,6 @@ const CreateQuiz = () => {
         correctChoice: currentCorrectChoice,
         questionImage: ''
       }
-      console.log(currentQuestion);
       // save current question/choices data
       dispatch(addQuestion(addQuestion(currentQuestion)));
       dispatch(currentQuestionNumber(currentQNumber + 1));
@@ -184,20 +179,14 @@ const CreateQuiz = () => {
   }
 
   const handlePreviousQuestion = () => {
-    // filter question where the question number is 
-    // current quesition number - 1
     dispatch(currentQuestionNumber(currentQNumber - 1));
-    const previousQuestion = quizQuestions.filter(question => {
-      console.log('result', currentQNumber - 1);
-      if(question.payload?.questionNumber === currentQNumber - 1) {
-        console.log('entry', question);
-        dispatch(addQuestionText(question.payload.questionText));
-        dispatch(addChoices(question.payload.choices));
-        dispatch(addNumberOfChoices(question.payload.choices.numberOfChoices));
-        return question.payload.questionNumber === currentQNumber - 1;
-      }
-      return;
-    });
+    const previousQuestion = quizQuestions.filter(question => 
+      question && question.payload && question.payload.questionNumber === currentQNumber - 1);
+    console.log('caralha', previousQuestion);
+    
+    dispatch(addQuestionText(previousQuestion && previousQuestion[0].payload.questionText));
+    dispatch(addChoices(previousQuestion && previousQuestion[0].payload.choices));
+    dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].payload.choices.numberOfChoices));
   }
 
   const resetQuestionFields = () => {
