@@ -81,11 +81,13 @@ const QuizDetails = (props) => {
                         </div>
                         <div className={styles.itemContainer}>
                             <div className={styles.detailTitle}>Answers:</div>
-                            {question.answers.map((answer) => 
-                                <div>
-                                    <p>{answer}</p>
-                                </div>
-                            )}
+                            <div className={styles.answersContainer}>
+                                {question.answers.map((answer) => 
+                                    <div>
+                                        <p>{answer}</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         </>
                     )}
