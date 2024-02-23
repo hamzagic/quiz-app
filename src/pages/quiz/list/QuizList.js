@@ -15,6 +15,7 @@ const QuizList = () => {
   const [quizList, setQuizList] = useState([]);
   const [showDetails, setShowDetails] = useState(false);
   const [id, setId] = useState('');
+  const [details, setDetails] = useState(null);
   const showPanel = useSelector((state) => state.quiz.value);
   const dispatch = useDispatch();
   const token = Cookies.get('token');
@@ -22,7 +23,7 @@ const QuizList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await API.get('quiz/' + decoded.id)
+      await API.get(apiConstants.quiz_get + decoded.id)
         .then((res) => {
           console.log("result", res);
           setQuizList(res.data.data);
@@ -32,11 +33,23 @@ const QuizList = () => {
         });
     };
     fetchData();
-  }, []);
+  }, [decoded.id]);
 
-  const handleSeeQuizDetails = (quiz) => {
-    setId(quiz);
-    dispatch(displayAddPanel());
+  const handleSeeQuizDetails = async (id) => {
+    const token = Cookies.get('token'); 
+    console.log(id);
+    setId(id);
+    await API.get(`${apiConstants.quiz_get}details/${id}`, {
+      headers: {
+        token 
+      },
+    })
+    .then(res => {
+      console.log(res);
+      setDetails(res.data.data);
+      dispatch(displayAddPanel());
+    })
+    .catch(error => console.log(error));
   };
 
   const buttonStyle = {
@@ -75,8 +88,6 @@ const QuizList = () => {
               <tr>
                 <th>Quiz Name</th>
                 <th>Total Questions</th>
-                {/* <th>Questions Per Page</th> */}
-                {/* <th>Back Button</th> */}
                 {/* <th>Start Date</th> */}
                 {/* <th>End Date</th> */}
                 <th>Active</th>
@@ -91,8 +102,6 @@ const QuizList = () => {
                   <tr>
                     <td>{quiz.quizName}</td>
                     <td>{quiz.numberOfQuestions}</td>
-                    {/* <td>{quiz.questions_per_page}</td> */}
-                    {/* <td>{quiz.back_button ? 'Yes' : 'No'}</td> */}
                     {/* <td>{quiz.start_date}</td> */}
                     {/* <td>{quiz.end_date}</td> */}
                     <td>{quiz.isActive ? 'Yes' : 'No'}</td>
@@ -101,7 +110,7 @@ const QuizList = () => {
                     <td>
                       <button
                         className={bt.btnPrimary}
-                        onClick={() => handleSeeQuizDetails(quiz.quiz_id)}
+                        onClick={() => handleSeeQuizDetails(quiz._id)}
                       >
                         Details
                       </button>
@@ -113,7 +122,9 @@ const QuizList = () => {
           </table>
         </>
       )}
-      {showPanel && <QuizDetails id={id} />}
+      {showPanel && 
+        <QuizDetails details={details} id={id} /> 
+      }
       {quizList.length === 0 && <h2>No Quizzes Found</h2>}
     </div>
   );

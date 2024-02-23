@@ -94,24 +94,46 @@ const CreateQuiz = () => {
     cursor: "pointer",
   };
 
-  const handleCreateClick = async () => {
+  const handleFinishQuiz = async () => {
+    console.log('submit');
     if (hasErrors) return;
     setErrorMsg("");
-    const formData = new FormData();
-    formData.append("name", name);
-    await API.post(apiConstants.quiz_post, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    setMessage("");
+    const numberOfQuestions = quizQuestions.length;
+    const questions = [];
+    quizQuestions.forEach(q => {
+      const question = {
+        correctAnswerIndex: q.payload.correctAnswerIndex,
+        order: q.payload.order,
+        questionImage: q.payload.questionImage,
+        questionText: q.payload.questionText,
+        answers: q.payload.answers
+      }
+      questions.push(question);
+    });
+    const data = {
+      "name": quizName,
+      "creator": "65ca1469366f6775cc068903",
+      "totalQuestions": numberOfQuestions,
+      "questions": questions
+    }
+    await API.post(apiConstants.quiz_post, data, {
     })
       .then((res) => {
-        console.log(res);
-        setMessage("Quiz created successfully!");
-        clearFields();
+        if (res.data.errors) {
+          setErrorMsg("Error: " + res.data.errors[0].msg);
+          return;
+        } else if(res.data.error) {
+          setErrorMsg("Error: " + res.data.error);
+        }
+         else {
+          setMessage("Quiz created successfully!");
+          clearFields();
+          setShowQuestions(false);
+        }
       })
       .catch((err) => {
-        console.log(err);
-        setErrorMsg("Could Not Create Quiz");
+        setErrorMsg("Could Not Create Quiz: " + err.message);
       });
   };
 
@@ -138,6 +160,8 @@ const CreateQuiz = () => {
 
   const handleNextClick = (data) => {
     // check if quiz name is valid
+    validateField(name, 6, setNameError);
+    if (!name) return;
     // check if image has been added
     // open question component
     dispatch(addQuizName(name));
@@ -162,11 +186,11 @@ const CreateQuiz = () => {
     } else {
       console.log('next question does not exist');
       const currentQuestion = {
-        questionNumber: currentQNumber,
+        order: currentQNumber,
         questionText: currentQuestionText,
         numberOfChoices: numberOfChoices,
-        choices: currentChoices,
-        correctChoice: currentCorrectChoice,
+        answers: currentChoices,
+        correctAnswerIndex: currentCorrectChoice,
         questionImage: ''
       }
       // save current question/choices data
@@ -248,7 +272,7 @@ const CreateQuiz = () => {
             <div className={styles.buttonsContainer}>
               <Button title="Previous Question" styles={nextStyles} click={handlePreviousQuestion} />
               <Button title="Next Question" styles={nextStyles} click={handleNextQuestion} />
-              <Button title="Finish Quiz" styles={finishStyles} />
+              <Button title="Finish Quiz" styles={finishStyles} click={handleFinishQuiz} />
             </div>
           </>
         )}
