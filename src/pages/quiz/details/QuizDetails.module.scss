@@ -1,12 +1,31 @@
-.detailContainer {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.detailsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     padding: 10px;
     margin-top: 10px;
 }
 
+.detailContainer {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
 .detailTitle {
     font-weight: bold;
+}
+
+.itemContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.questionsContainer {
+    // display: flex;
+    // flex-direction: columm;
+    // justify-content: center;
+    // align-items: center;
 }

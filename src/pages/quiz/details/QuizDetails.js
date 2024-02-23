@@ -9,21 +9,10 @@ import Button from '../../../components/button/Button';
 
 const QuizDetails = (props) => {
     const showPanel = useSelector((state) => state.quiz.value);
-    const quizData = useSelector((state) => state.quizDetails.value);
     const details = props.details;
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // const fetchData = async () => {
-        //   await API.get(apiConstants.quiz_get + '/' + props.id)
-        //     .then((res) => {
-        //       dispatch(showData(res.data.data))
-        //     })
-        //     .catch((err) => {
-        //       console.log('ERROR ', err);
-        //     });
-        // };
-        // fetchData();
     }, [details]);
 
     const btnStyle = {
@@ -43,23 +32,17 @@ const QuizDetails = (props) => {
     return (
         <>
         {showPanel && details &&
-            <div>
+            <div className={styles.detailsContainer}>
                 <Button title="< Back" styles={btnStyle} click={handleGoBack} />
                 <div className={styles.detailContainer}>
-                    <div>
+                    <div className={styles.itemContainer}>
                         <div className={styles.detailTitle}>Quiz Name</div>
-                        {/* <div>{quizData.quiz.quiz_name}</div> */}
                         <div>{details.quizName}</div>
                     </div>
-                    <div>
+                    <div className={styles.itemContainer}>
                         <div className={styles.detailTitle}>Total Questions</div>
-                        {/* <div>{quizData.quiz.total_questions}</div> */}
                         <div>{details.numberOfQuestions}</div>
                     </div>
-                    {/* <div>
-                        <div className={styles.detailTitle}>Question Per Page</div>
-                        <div>{quizData.quiz.questions_per_page}</div>
-                    </div> */}
                     {/* <div>
                         <div className={styles.detailTitle}>Start Date</div>
                         <div>{quizData.quiz.start_date}</div>
@@ -68,21 +51,45 @@ const QuizDetails = (props) => {
                         <div className={styles.detailTitle}>End Date</div>
                         <div>{quizData.quiz.end_date}</div>
                     </div> */}
-                    <div>
+                    <div className={styles.itemContainer}>
                         <div className={styles.detailTitle}>Active</div>
-                        {/* <div>{quizData.quiz.active ? 'Yes' : 'No'}</div> */}
                         <div>{details.isActive ? 'Yes' : 'No'}</div>
                     </div>
-                    <div>
+                    <div className={styles.itemContainer}>
+                        <div className={styles.detailTitle}>Shared</div>
+                        <div>{details.isShared ? 'Yes' : 'No'}</div>
+                    </div>
+                    <div className={styles.itemContainer}>
                         <div className={styles.detailTitle}>Created</div>
-                        {/* <div>{quizData.quiz.created_at}</div> */}
                         <div>{details.created}</div>
                     </div>
                     {/* <div>
                         <div className={styles.detailTitle}>Updated</div>
                         <div>{quizData.quiz.updated_at}</div>
                     </div> */}
+                    <div className={styles.questionContainer}>
                     <div className={styles.detailTitle}>Questions</div>
+                    {details.questions.map(question => 
+                        <>
+                        <div className={styles.itemContainer}>
+                            <div className={styles.detailTitle}>Title:</div> 
+                            <div>{question.questionText}</div>
+                        </div>
+                        <div className={styles.itemContainer}>
+                            <div className={styles.detailTitle}>Order:</div>
+                            <div>{question.order}</div>
+                        </div>
+                        <div className={styles.itemContainer}>
+                            <div className={styles.detailTitle}>Answers:</div>
+                            {question.answers.map((answer) => 
+                                <div>
+                                    <p>{answer}</p>
+                                </div>
+                            )}
+                        </div>
+                        </>
+                    )}
+                    </div>
                 </div>
             </div> 
         }
