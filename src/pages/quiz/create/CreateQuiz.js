@@ -142,7 +142,7 @@ const CreateQuiz = () => {
 
   const handleCancelClick = () => {
     setShowQuestions(false);
-    history.push("/quiz");
+    history.push('/quiz');
   };
 
   const handleName = (e) => {

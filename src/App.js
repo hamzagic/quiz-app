@@ -31,9 +31,9 @@ function App() {
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/profile" component={Profile} />
       <Route exact path="/quiz" component={Quiz} />
+      <Route exact path="/quiz/create" component={CreateQuiz} />
       <Route component={NotFound} />
       {/* <Route path="/users" component={Users} /> */}
-      <Route path="/quiz/create" component={CreateQuiz} />
     </div>
     );
   } else {

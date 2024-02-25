@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { displayAddPanel } from '../../../store/reducers/quizReducer';
-// import { showData } from '../../../store/reducers/quizDetailReducer';
 import styles from './QuizDetails.module.scss';
 import API from '../../../routes/api';
 import { apiConstants } from '../../../constants/constants';
@@ -9,6 +8,8 @@ import Button from '../../../components/button/Button';
 import DateFormatter from '../../../utils/dateFormatter';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+import { useHistory } from 'react-router-dom';
+import { addQuizName, addQuestion } from '../../../store/reducers/createQuizReducer';
 
 const QuizDetails = (props) => {
     const showPanel = useSelector((state) => state.quiz.value);
@@ -16,6 +17,7 @@ const QuizDetails = (props) => {
     const dispatch = useDispatch();
     const token = Cookies.get('token');
     const decoded = jwtDecode(token);
+    const history = useHistory();
 
     useEffect(() => {
     }, [details, showPanel]);
@@ -45,7 +47,7 @@ const QuizDetails = (props) => {
     }
 
     const handleDelete = () => {
-        const deleteConfirm = window.confirm('Are you sure you want to delete the quiz?');
+        const deleteConfirm = window.confirm('Are you sure you want to delete the quiz? This action cannot be undone.');
         if (deleteConfirm) {
             if (details.creator === decoded.id) {
                 API.delete(`${apiConstants.quiz_delete}/${details.creator}/${details._id}`)
@@ -56,6 +58,15 @@ const QuizDetails = (props) => {
                 .catch(err => console.log(err));
             }
         }
+    }
+
+    const handleEdit = () => {
+        console.log(details);
+        dispatch(displayAddPanel(false));
+        // dispatch actions and redirect to create quiz section
+        dispatch(addQuizName(details.quizName));
+        dispatch(addQuestion(details.questions));
+        history.push('quiz/create');
     }
 
     const buttonStyles = {
@@ -129,7 +140,7 @@ const QuizDetails = (props) => {
                     </div>
                     <div className={styles.buttonContainer}>
                         <Button title="Share Quiz" styles={buttonStyles} />
-                        <Button title="Edit Quiz" styles={buttonStyles} />
+                        <Button title="Edit Quiz" styles={buttonStyles} click={handleEdit} />
                         <Button title="Delete Quiz" styles={redButton} click={handleDelete} />
                     </div>
                 </div>
