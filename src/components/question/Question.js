@@ -25,7 +25,7 @@ const Question = () => {
   const [correctChoice, setCorrectChoice] = useState(currentQuestion.payload?.correctChoice || -1);
   // Effect to load current question data
   useEffect(() => {
-    const question = questions.find(q => q.payload.questionNumber === currentQNumber);
+    const question = questions.find(q => q.payload.order === currentQNumber);
     if (question) {
       setQuestionText(question.payload.questionText || '');
       setChoices(question.payload.choices || []);

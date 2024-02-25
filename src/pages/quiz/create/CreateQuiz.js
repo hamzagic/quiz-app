@@ -39,10 +39,11 @@ const CreateQuiz = () => {
   const quizQuestions = useSelector(state => state.createQuiz.questions);
 
   useEffect(() => {
+    if(quizName) setName(quizName);
     if(mustReset) {
       console.log('reset');
     } 
-  },[mustReset, dispatch, numberOfChoices]);
+  },[mustReset, dispatch, numberOfChoices, quizName]);
 
   const history = useHistory();
 
@@ -178,13 +179,13 @@ const CreateQuiz = () => {
       // we just need to load the data
       console.log('next question exists');
       quizQuestions.filter(question => {
-        if (question.payload.questionNumber === currentQNumber + 1) {
+        if (question.payload.order === currentQNumber + 1) {
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.payload.questionText));
-          dispatch(addChoices(question.payload.choices));
-          dispatch(setCorrectChoiceIndex(question.payload.correctChoiceIndex));
+          dispatch(addChoices(question.payload.answers));
+          dispatch(setCorrectChoiceIndex(question.payload.correctAnswerIndex));
         }
-        return question.payload.questionNumber === currentQNumber + 1;
+        return question.payload.order === currentQNumber + 1;
       });
     } else {
       console.log('next question does not exist');
@@ -207,13 +208,13 @@ const CreateQuiz = () => {
 
   const handlePreviousQuestion = () => {
     if (currentQNumber - 1 <= 0) return;
-    dispatch(currentQuestionNumber(currentQNumber - 1));
+    dispatch(currentQuestionNumber(currentQNumber - 1));    
     const previousQuestion = quizQuestions.filter(question => 
-      question && question.payload && question.payload.questionNumber === currentQNumber - 1);
+      question && question.payload && question.payload.order === currentQNumber - 1);
     
     dispatch(addQuestionText(previousQuestion && previousQuestion[0].payload.questionText));
-    dispatch(addChoices(previousQuestion && previousQuestion[0].payload.choices));
-    dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].payload.choices.numberOfChoices));
+    dispatch(addChoices(previousQuestion && previousQuestion[0].payload.answers));
+    dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].payload.answers.numberOfChoices));
   }
 
   const resetQuestionFields = () => {
@@ -252,7 +253,7 @@ const CreateQuiz = () => {
             <div className={styles.descriptions}>
               <Input
                 placeholder="Name"
-                value={name}
+                value={name.length > 0 ? name : quizName}
                 onChange={handleName}
                 onBlur={() => validateField(name, 6, setNameError)}
               />
