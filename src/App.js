@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/login/Login';
@@ -14,6 +14,16 @@ import './App.scss';
 
 function App() {
   const loggedInUser = Cookies.get('token');
+  const history = useHistory();
+
+  useEffect(() => {
+    if(loggedInUser) {
+      history.push("/dashboard");
+    } else {
+      history.push("/login");
+    }
+  }, [loggedInUser, history]);
+
   if (loggedInUser && loggedInUser.length > 0) {
     return(
       <div className="App">

@@ -21,16 +21,23 @@
 .itemContainer {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 6px;
 }
 
-.questionsContainer {
-    // display: flex;
-    // flex-direction: columm;
-    // justify-content: center;
-    // align-items: center;
+.questionContainer {
+    margin-top: 20px;
+}
+
+.separator {
+    margin-top: 10px;
 }
 
 .answersContainer {
     display: flex;
     flex-direction: column;
+}
+
+.answerTitle {
+    margin-bottom: 30px;
 }

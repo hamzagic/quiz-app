@@ -6,8 +6,8 @@ export const quizSlice = createSlice({
     value: false
   },
   reducers: {
-    displayAddPanel: (state) => {
-      state.value = true;
+    displayAddPanel: (state, action) => {
+      state.value = action.payload;
     },
 
     hideAddPanel: (state) => {

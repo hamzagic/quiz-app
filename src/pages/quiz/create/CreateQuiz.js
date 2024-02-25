@@ -174,7 +174,7 @@ const CreateQuiz = () => {
       // that means we have already a next question created
       // we just need to load the data
       console.log('next question exists');
-      const currentQuestion = quizQuestions.filter(question => {
+      quizQuestions.filter(question => {
         if (question.payload.questionNumber === currentQNumber + 1) {
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.payload.questionText));

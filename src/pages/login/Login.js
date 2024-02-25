@@ -13,9 +13,9 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const loggedInUser = Cookies.get('token');
 
-  useEffect(() => {
-  }, [email, password]);
+  useEffect(() => {}, [email, password, loggedInUser]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
