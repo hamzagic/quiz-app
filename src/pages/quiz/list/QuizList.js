@@ -31,7 +31,7 @@ const QuizList = () => {
         });
     };
     fetchData();
-  }, [decoded.id]);
+  }, [decoded.id, showPanel]);
 
   const handleSeeQuizDetails = async (id) => {
     const token = Cookies.get('token'); 

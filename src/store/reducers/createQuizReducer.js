@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {}
+
 export const createQuizSlice = createSlice({
   name: 'createQuiz',
   // initialState: {},
@@ -47,6 +49,9 @@ export const createQuizSlice = createSlice({
     },
     deleteQuestion: (state, action) => {
       state.questions = state.questions.filter(question => question.payload.questionNumber !== action.payload) 
+    },
+    resetQuiz: (state) => {
+      state = initialState;
     }
   }
 });
@@ -61,7 +66,8 @@ export const {
   addChoices, 
   setCorrectChoiceIndex,
   resetQuestionComponent,
-  deleteQuestion
+  deleteQuestion,
+  resetQuiz
 } = createQuizSlice.actions;
 
 export default createQuizSlice.reducer;

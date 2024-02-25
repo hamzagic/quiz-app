@@ -6,6 +6,7 @@ export const apiConstants = {
   'user_get': 'user',
   'user_post': 'user',
   'quiz_get': '/quiz/',
-  'quiz_post': 'quiz'
+  'quiz_post': 'quiz',
+  'quiz_delete': 'quiz'
 };
 

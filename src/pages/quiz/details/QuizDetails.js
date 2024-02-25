@@ -3,18 +3,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { displayAddPanel } from '../../../store/reducers/quizReducer';
 // import { showData } from '../../../store/reducers/quizDetailReducer';
 import styles from './QuizDetails.module.scss';
-// import API from '../../../routes/api';
-// import { apiConstants } from '../../../constants/constants';
+import API from '../../../routes/api';
+import { apiConstants } from '../../../constants/constants';
 import Button from '../../../components/button/Button';
 import DateFormatter from '../../../utils/dateFormatter';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 const QuizDetails = (props) => {
     const showPanel = useSelector((state) => state.quiz.value);
     const details = props.details;
     const dispatch = useDispatch();
+    const token = Cookies.get('token');
+    const decoded = jwtDecode(token);
 
     useEffect(() => {
-    }, [details]);
+    }, [details, showPanel]);
 
     const btnStyle = {
         border: 'none',
@@ -26,8 +30,42 @@ const QuizDetails = (props) => {
         cursor: 'pointer',
     }
 
+    const redButton = {
+        border: 'none',
+        background: '#ff0000',
+        color: '#fff',
+        fontWeight: 'bold',
+        padding: '6px 12px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+    }
+
     const handleGoBack = () => {
         dispatch(displayAddPanel(false));
+    }
+
+    const handleDelete = () => {
+        const deleteConfirm = window.confirm('Are you sure you want to delete the quiz?');
+        if (deleteConfirm) {
+            if (details.creator === decoded.id) {
+                API.delete(`${apiConstants.quiz_delete}/${details.creator}/${details._id}`)
+                .then(res => {
+                    console.log(res);
+                    dispatch(displayAddPanel(false));
+                })
+                .catch(err => console.log(err));
+            }
+        }
+    }
+
+    const buttonStyles = {
+        backgroundColor: '#3f51b5',
+        color: '#fff',
+        border: 'none',
+        padding: '5px 10px',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        borderRadius: '6px'
     }
 
     return (
@@ -44,14 +82,6 @@ const QuizDetails = (props) => {
                         <div className={styles.detailTitle}>Total Questions</div>
                         <div>{details.numberOfQuestions}</div>
                     </div>
-                    {/* <div>
-                        <div className={styles.detailTitle}>Start Date</div>
-                        <div>{quizData.quiz.start_date}</div>
-                    </div> */}
-                    {/* <div>
-                        <div className={styles.detailTitle}>End Date</div>
-                        <div>{quizData.quiz.end_date}</div>
-                    </div> */}
                     <div className={styles.itemContainer}>
                         <div className={styles.detailTitle}>Active</div>
                         <div>{details.isActive ? 'Yes' : 'No'}</div>
@@ -97,9 +127,15 @@ const QuizDetails = (props) => {
                                 </div>
                             )}
                     </div>
+                    <div className={styles.buttonContainer}>
+                        <Button title="Share Quiz" styles={buttonStyles} />
+                        <Button title="Edit Quiz" styles={buttonStyles} />
+                        <Button title="Delete Quiz" styles={redButton} click={handleDelete} />
+                    </div>
                 </div>
             </div> 
         }
+        
         </>
     );
 }

@@ -9,7 +9,9 @@ import {
   addQuestionText, 
   addNumberOfChoices, 
   addChoices, 
-  setCorrectChoiceIndex } from "../../../store/reducers/createQuizReducer";
+  setCorrectChoiceIndex,
+  resetQuiz
+} from "../../../store/reducers/createQuizReducer";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import styles from "./CreateQuiz.module.scss";
 import Input from "../../../components/input/Input";
@@ -128,6 +130,7 @@ const CreateQuiz = () => {
         }
          else {
           setMessage("Quiz created successfully!");
+          dispatch(resetQuiz());
           clearFields();
           setShowQuestions(false);
         }

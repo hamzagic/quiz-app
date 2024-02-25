@@ -25,7 +25,6 @@ const AnalyticsQuizzes = () => {
     const fetchData = async () => {
       await API.get(apiConstants.quiz_get + decoded.id)
       .then(res => {
-        console.log(res);
         setQuizList(res.data.data);
         getActiveQuizzes(res.data.data);
         getSharedQuizzes(res.data.data);
