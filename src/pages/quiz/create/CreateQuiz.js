@@ -175,17 +175,18 @@ const CreateQuiz = () => {
   };
 
   const handleNextQuestion = () => {
-    if (quizQuestions && quizQuestions.length > currentQNumber) {
+    console.log('current number', currentQNumber);
+    // if (quizQuestions && quizQuestions.length > currentQNumber) {
+    if (currentQNumber < quizQuestions && quizQuestions.length) {
       // that means we have already a next question created
       // we just need to load the data
-      console.log('next question exists');
       quizQuestions.filter(question => {
+        console.log('next question exists', question);
         if (question.order === currentQNumber + 1) {
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.questionText));
           dispatch(addChoices(question.answers));
           dispatch(setCorrectChoiceIndex(question.correctAnswerIndex));
-          // dispatch(addNumberOfChoices(question.answers.length));
         }
         return question.order === currentQNumber + 1;
       });
@@ -194,19 +195,26 @@ const CreateQuiz = () => {
       const currentQuestion = {
         order: currentQNumber,
         questionText: currentQuestionText,
-        numberOfChoices: numberOfChoices,
+        numberOfChoices: currentChoices.length,
         answers: currentChoices,
         correctAnswerIndex: currentCorrectChoice,
         questionImage: ''
       }
       console.log('object', currentQuestion);
-      // save current question/choices data
-      dispatch(addQuestion(currentQuestion));
+      if (currentQNumber && currentQuestionText && currentChoices.length > 0) {
+        const questionExists = quizQuestions.some(el => el.order === currentQNumber);
+        if (!questionExists) saveQuestionToStore(currentQuestion);
+      } else {
+        console.log('could not save question');
+      }
       dispatch(currentQuestionNumber(currentQNumber + 1));
-      // reset component to display the next question form
       dispatch(resetQuestionComponent(true));
-      resetQuestionFields(); 
+      resetQuestionFields();
     } 
+  }
+
+  const saveQuestionToStore = (currentQuestion) => {
+    dispatch(addQuestion(currentQuestion));
   }
 
   const handlePreviousQuestion = () => {
@@ -223,7 +231,7 @@ const CreateQuiz = () => {
 
   const resetQuestionFields = () => {
     dispatch(addQuestionText(''));
-    dispatch(addNumberOfChoices(0));
+    // dispatch(addNumberOfChoices(0));
     dispatch(addChoices([]));
   }
 

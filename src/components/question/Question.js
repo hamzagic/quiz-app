@@ -66,6 +66,7 @@ const Question = () => {
   const handleChoiceQty = (e) => {
     const qty = parseInt(e.target.value);
     setChoiceQty(qty);
+    console.log(e.target.value);
     // Reset choices if the number changes
     setChoices(new Array(qty).fill(''));
   };
@@ -107,7 +108,7 @@ const Question = () => {
             {[2, 3, 4, 5].map(num => (
               <div key={num} className={styles.choiceItem}>
                 <label htmlFor={`${num}`}>{num}</label>
-                <input type='radio' id={`${num}`} value={choiceQty ? choiceQty : num} checked={choiceQty === num} name='alternatives' onChange={handleChoiceQty} />
+                <input type='radio' id={`${num}`} value={num} checked={choiceQty === num} name='alternatives' onChange={handleChoiceQty} />
               </div>
             ))}
           </div>
