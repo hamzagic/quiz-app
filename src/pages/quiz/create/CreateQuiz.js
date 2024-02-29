@@ -106,11 +106,11 @@ const CreateQuiz = () => {
     const questions = [];
     quizQuestions.forEach(q => {
       const question = {
-        correctAnswerIndex: q.payload.correctAnswerIndex,
-        order: q.payload.order,
-        questionImage: q.payload.questionImage,
-        questionText: q.payload.questionText,
-        answers: q.payload.answers
+        correctAnswerIndex: q.correctAnswerIndex,
+        order: q.order,
+        questionImage: q.questionImage,
+        questionText: q.questionText,
+        answers: q.answers
       }
       questions.push(question);
     });
@@ -143,6 +143,7 @@ const CreateQuiz = () => {
 
   const handleCancelClick = () => {
     setShowQuestions(false);
+    dispatch(resetQuiz());
     history.push('/quiz');
   };
 
@@ -179,13 +180,13 @@ const CreateQuiz = () => {
       // we just need to load the data
       console.log('next question exists');
       quizQuestions.filter(question => {
-        if (question.payload.order === currentQNumber + 1) {
+        if (question.order === currentQNumber + 1) {
           dispatch(currentQuestionNumber(currentQNumber + 1));
-          dispatch(addQuestionText(question.payload.questionText));
-          dispatch(addChoices(question.payload.answers));
-          dispatch(setCorrectChoiceIndex(question.payload.correctAnswerIndex));
+          dispatch(addQuestionText(question.questionText));
+          dispatch(addChoices(question.answers));
+          dispatch(setCorrectChoiceIndex(question.correctAnswerIndex));
         }
-        return question.payload.order === currentQNumber + 1;
+        return question.order === currentQNumber + 1;
       });
     } else {
       console.log('next question does not exist');
@@ -198,7 +199,7 @@ const CreateQuiz = () => {
         questionImage: ''
       }
       // save current question/choices data
-      dispatch(addQuestion(addQuestion(currentQuestion)));
+      dispatch(addQuestion(currentQuestion));
       dispatch(currentQuestionNumber(currentQNumber + 1));
       // reset component to display the next question form
       dispatch(resetQuestionComponent(true));
@@ -210,11 +211,11 @@ const CreateQuiz = () => {
     if (currentQNumber - 1 <= 0) return;
     dispatch(currentQuestionNumber(currentQNumber - 1));    
     const previousQuestion = quizQuestions.filter(question => 
-      question && question.payload && question.payload.order === currentQNumber - 1);
+      question && question.order === currentQNumber - 1);
     
-    dispatch(addQuestionText(previousQuestion && previousQuestion[0].payload.questionText));
-    dispatch(addChoices(previousQuestion && previousQuestion[0].payload.answers));
-    dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].payload.answers.numberOfChoices));
+    dispatch(addQuestionText(previousQuestion && previousQuestion[0].questionText));
+    dispatch(addChoices(previousQuestion && previousQuestion[0].answers));
+    dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].answers.numberOfChoices));
   }
 
   const resetQuestionFields = () => {

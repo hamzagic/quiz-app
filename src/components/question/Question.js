@@ -16,21 +16,21 @@ const Question = () => {
   const dispatch = useDispatch();
   const currentQNumber = useSelector(state => state.createQuiz.currentQuestionNumber);
   const questions = useSelector(state => state.createQuiz.questions);
-  const currentQuestion = questions.find(q => q.payload?.questionNumber === currentQNumber) || {};
+  const currentQuestion = questions.find(q => q.questionNumber === currentQNumber) || {};
   const [choiceQty, setChoiceQty] = useState(currentQuestion.numberOfChoices || 0);
   // Initialize component state
   const [questionText, setQuestionText] = useState(currentQuestion.questionText || '');
   const [choices, setChoices] = useState(currentQuestion.choices || []);
   const currentQuestionText = useSelector(state => state.createQuiz.currentQuestionText);
-  const [correctChoice, setCorrectChoice] = useState(currentQuestion.payload?.correctChoice || -1);
+  const [correctChoice, setCorrectChoice] = useState(currentQuestion.correctChoice || -1);
   // Effect to load current question data
   useEffect(() => {
-    const question = questions.find(q => q.payload.order === currentQNumber);
+    const question = questions.find(q => q.order === currentQNumber);
     if (question) {
-      setQuestionText(question.payload.questionText || '');
-      setChoices(question.payload.choices || []);
-      setCorrectChoice(question.payload.correctChoice);
-      setCorrectChoiceIndex(question.payload.correctChoice || -1);
+      setQuestionText(question.questionText || '');
+      setChoices(question.choices || []);
+      setCorrectChoice(question.correctChoice);
+      setCorrectChoiceIndex(question.correctChoice || -1);
     } else {
       // Reset for new question
       console.log('reset for new question');

@@ -1,10 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {}
-
 export const createQuizSlice = createSlice({
   name: 'createQuiz',
-  // initialState: {},
   initialState: {
     quizName: '',
     quizImage: '',
@@ -51,7 +48,9 @@ export const createQuizSlice = createSlice({
       state.questions = state.questions.filter(question => question.payload.questionNumber !== action.payload) 
     },
     resetQuiz: (state) => {
-      state = initialState;
+      state.quizName = '';
+      state.quizImage = '';
+      state.questions = [];
     }
   }
 });
