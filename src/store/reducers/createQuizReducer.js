@@ -39,13 +39,13 @@ export const createQuizSlice = createSlice({
       state.choices = action.payload
     },
     setCorrectChoiceIndex: (state, action) => {
-      state.correctChoiceIndex = action.payload
+      state.correctAnswerIndex = action.payload
     },
     resetQuestionComponent: (state, action) => {
       state.shouldReset = action.payload;
     },
     deleteQuestion: (state, action) => {
-      state.questions = state.questions.filter(question => question.payload.questionNumber !== action.payload) 
+      state.questions = state.questions.filter(question => question.questionNumber !== action.payload) 
     },
     resetQuiz: (state) => {
       state.quizName = '';

@@ -33,7 +33,7 @@ const CreateQuiz = () => {
   const currentQNumber = useSelector(state => state.createQuiz.currentQuestionNumber);
   const currentQuestionText = useSelector(state => state.createQuiz.currentQuestionText);
   const currentChoices = useSelector(state => state.createQuiz.choices);
-  const currentCorrectChoice = useSelector(state => state.createQuiz.correctChoiceIndex);
+  const currentCorrectChoice = useSelector(state => state.createQuiz.correctAnswerIndex);
   const numberOfChoices = useSelector(state => state.createQuiz.numberOfChoices);
   const mustReset = useSelector(state => state.createQuiz.shouldReset);
   const quizQuestions = useSelector(state => state.createQuiz.questions);
@@ -185,6 +185,7 @@ const CreateQuiz = () => {
           dispatch(addQuestionText(question.questionText));
           dispatch(addChoices(question.answers));
           dispatch(setCorrectChoiceIndex(question.correctAnswerIndex));
+          // dispatch(addNumberOfChoices(question.answers.length));
         }
         return question.order === currentQNumber + 1;
       });
@@ -198,6 +199,7 @@ const CreateQuiz = () => {
         correctAnswerIndex: currentCorrectChoice,
         questionImage: ''
       }
+      console.log('object', currentQuestion);
       // save current question/choices data
       dispatch(addQuestion(currentQuestion));
       dispatch(currentQuestionNumber(currentQNumber + 1));
@@ -213,6 +215,7 @@ const CreateQuiz = () => {
     const previousQuestion = quizQuestions.filter(question => 
       question && question.order === currentQNumber - 1);
     
+    console.log('previousQuestion', previousQuestion);
     dispatch(addQuestionText(previousQuestion && previousQuestion[0].questionText));
     dispatch(addChoices(previousQuestion && previousQuestion[0].answers));
     dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].answers.numberOfChoices));

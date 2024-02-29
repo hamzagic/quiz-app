@@ -27,10 +27,12 @@ const Question = () => {
   useEffect(() => {
     const question = questions.find(q => q.order === currentQNumber);
     if (question) {
+      console.log('previous question exists', question);
       setQuestionText(question.questionText || '');
-      setChoices(question.choices || []);
-      setCorrectChoice(question.correctChoice);
-      setCorrectChoiceIndex(question.correctChoice || -1);
+      setChoices(question.answers || []);
+      // setCorrectChoice(question.correctAnswerIndex);
+      setCorrectChoiceIndex(question.correctAnswerIndex || -1);
+      setChoiceQty(question.numberOfChoices);
     } else {
       // Reset for new question
       console.log('reset for new question');
@@ -59,9 +61,6 @@ const Question = () => {
   const handleCorrectChoiceChange = (index) => {
     setCorrectChoice(index);
     dispatch(setCorrectChoiceIndex(index));
-    // Update the correct choice in the current question in the Redux store
-    // const updatedQuestion = { ...currentQuestion, correctChoice: index };
-    // dispatch(addQuestion(updatedQuestion));
   };
 
   const handleChoiceQty = (e) => {
@@ -108,7 +107,7 @@ const Question = () => {
             {[2, 3, 4, 5].map(num => (
               <div key={num} className={styles.choiceItem}>
                 <label htmlFor={`${num}`}>{num}</label>
-                <input type='radio' id={`${num}`} value={num} checked={choiceQty === num} name='alternatives' onChange={handleChoiceQty} />
+                <input type='radio' id={`${num}`} value={choiceQty ? choiceQty : num} checked={choiceQty === num} name='alternatives' onChange={handleChoiceQty} />
               </div>
             ))}
           </div>

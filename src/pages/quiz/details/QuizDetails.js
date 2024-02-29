@@ -9,7 +9,12 @@ import DateFormatter from '../../../utils/dateFormatter';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useHistory } from 'react-router-dom';
-import { addQuizName, addQuestion, resetQuiz } from '../../../store/reducers/createQuizReducer';
+import { 
+    addQuizName, 
+    addQuestion,
+    resetQuiz, 
+    currentQuestionNumber, 
+} from '../../../store/reducers/createQuizReducer';
 
 const QuizDetails = (props) => {
     const showPanel = useSelector((state) => state.quiz.value);
@@ -66,9 +71,11 @@ const QuizDetails = (props) => {
         dispatch(displayAddPanel(false));
         // dispatch actions and redirect to create quiz section
         dispatch(addQuizName(details.quizName));
+        dispatch(currentQuestionNumber(1));
         details.questions.forEach(question => {
             dispatch(addQuestion(question));
         });
+        
         history.push('quiz/create');
     }
 
