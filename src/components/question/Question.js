@@ -22,7 +22,7 @@ const Question = () => {
   const [questionText, setQuestionText] = useState(currentQuestion.questionText || '');
   const [choices, setChoices] = useState(currentQuestion.choices || []);
   const currentQuestionText = useSelector(state => state.createQuiz.currentQuestionText);
-  const [correctChoice, setCorrectChoice] = useState(currentQuestion.correctChoice || -1);
+  const [correctChoice, setCorrectChoice] = useState(currentQuestion.correctAnswerIndex || -1);
   // Effect to load current question data
   useEffect(() => {
     const question = questions.find(q => q.order === currentQNumber);
@@ -32,7 +32,8 @@ const Question = () => {
       setChoices(question.answers || []);
       // setCorrectChoice(question.correctAnswerIndex);
       setCorrectChoiceIndex(question.correctAnswerIndex || -1);
-      setChoiceQty(question.numberOfChoices);
+      setChoiceQty(question.correctAnswerIndex + 2);
+      setCorrectChoice(question.correctAnswerIndex);
     } else {
       // Reset for new question
       console.log('reset for new question');
