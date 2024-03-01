@@ -4,7 +4,8 @@ export const quizDetailSlice = createSlice({
   name: 'quiz',
   initialState: {
     value: '',
-    isEdit: false
+    isEdit: false,
+    currentId: ''
   },
   reducers: {
     showData: (state, action) => {
@@ -12,10 +13,13 @@ export const quizDetailSlice = createSlice({
     },
     isEdit: (state, action) => {
       state.isEdit = action.payload;
+    },
+    setId: (state, action) => {
+      state.currentId = action.payload;
     }
   }
 });
 
-export const { showData, isEdit } = quizDetailSlice.actions;
+export const { showData, isEdit, setId } = quizDetailSlice.actions;
 
 export default quizDetailSlice.reducer;

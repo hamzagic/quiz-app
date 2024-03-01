@@ -15,7 +15,7 @@ import {
     resetQuiz, 
     currentQuestionNumber, 
 } from '../../../store/reducers/createQuizReducer';
-import { isEdit } from '../../../store/reducers/quizDetailReducer';
+import { isEdit, setId } from '../../../store/reducers/quizDetailReducer';
 
 const QuizDetails = (props) => {
     const showPanel = useSelector((state) => state.quiz.value);
@@ -71,6 +71,7 @@ const QuizDetails = (props) => {
         console.log(details);
         dispatch(displayAddPanel(false));
         dispatch(isEdit(true));
+        dispatch(setId(details._id));
         // dispatch actions and redirect to create quiz section
         dispatch(addQuizName(details.quizName));
         dispatch(currentQuestionNumber(1));

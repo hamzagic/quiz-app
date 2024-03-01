@@ -22,7 +22,7 @@ import { apiConstants } from "../../../constants/constants";
 import Validator from "../../../utils/validator";
 import Question from "../../../components/question/Question";
 import { FaAngleLeft } from "react-icons/fa";
-import { isEdit } from "../../../store/reducers/quizDetailReducer";
+import { isEdit, setId } from "../../../store/reducers/quizDetailReducer";
 
 const CreateQuiz = () => {
   const [name, setName] = useState("");
@@ -39,11 +39,11 @@ const CreateQuiz = () => {
   const numberOfChoices = useSelector(state => state.createQuiz.numberOfChoices);
   const quizQuestions = useSelector(state => state.createQuiz.questions);
   const isEditQuiz = useSelector(state => state.quizDetails.isEdit);
+  const quizId = useSelector(state => state.quizDetails.currentId);
 
   useEffect(() => {
     if(quizName) setName(quizName);
-   
-  },[dispatch, numberOfChoices, quizName, currentChoices]);
+  },[dispatch, numberOfChoices, quizName, currentChoices, quizId]);
 
   const history = useHistory();
 
@@ -115,31 +115,49 @@ const CreateQuiz = () => {
       questions.push(question);
     });
     const data = {
-      "name": quizName,
-      "creator": "65ca1469366f6775cc068903",
-      "totalQuestions": numberOfQuestions,
-      "questions": questions
+      quizName: quizName,
+      creator: "65ca1469366f6775cc068903",
+      totalQuestions: numberOfQuestions,
+      questions: questions
     }
-    await API.post(apiConstants.quiz_post, data, {
-    })
-      .then((res) => {
-        if (res.data.errors) {
-          setErrorMsg("Error: " + res.data.errors[0].msg);
-          return;
-        } else if(res.data.error) {
-          setErrorMsg("Error: " + res.data.error);
-        }
-         else {
-          setMessage("Quiz created successfully!");
-          dispatch(resetQuiz());
-          clearFields();
-          setShowQuestions(false);
-          dispatch(isEdit(false));
-        }
+    console.log(data)
+    if(isEditQuiz) {
+      console.log('isEdit');
+      await API.post('quiz/update/' + quizId, data)
+      .then(res => {
+        console.log('res', res.data.data);
+        setMessage("Quiz updated successfully!");
+        dispatch(resetQuiz());
+        clearFields();
+        setShowQuestions(false);
+        dispatch(isEdit(false));
+        dispatch(setId(''));
       })
-      .catch((err) => {
-        setErrorMsg("Could Not Create Quiz: " + err.message);
-      });
+      .catch(err => console.log(err));
+    } else {
+      console.log('is new');
+      await API.post(apiConstants.quiz_post, data, {
+      })
+        .then((res) => {
+          if (res.data.errors) {
+            setErrorMsg("Error: " + res.data.errors[0].msg);
+            return;
+          } else if(res.data.error) {
+            setErrorMsg("Error: " + res.data.error);
+          }
+           else {
+            setMessage("Quiz created successfully!");
+            dispatch(resetQuiz());
+            clearFields();
+            setShowQuestions(false);
+            dispatch(isEdit(false));
+            dispatch(setId(''));
+          }
+        })
+        .catch((err) => {
+          setErrorMsg("Could Not Create Quiz: " + err.message);
+        });
+    } 
   };
 
   const handleCancelClick = () => {
@@ -152,6 +170,9 @@ const CreateQuiz = () => {
   const handleName = (e) => {
     setName(e.target.value);
     validateField(name, 6, setNameError);
+    if(isEditQuiz) {
+      dispatch(addQuizName(e.target.value));
+    }
   };
 
   const validateField = (value, min, fn) => {
