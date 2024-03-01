@@ -195,10 +195,12 @@ const CreateQuiz = () => {
   };
 
   const handleNextQuestion = () => {
+    console.log('value', currentCorrectChoice)
     // if (quizQuestions && quizQuestions.length > currentQNumber) {
       if (currentQNumber <= quizQuestions.length) {
       quizQuestions.filter(question => {
         if (question.order === currentQNumber + 1) {
+          console.log('current number + 1');
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.questionText));
           dispatch(addChoices(question.answers));
@@ -210,20 +212,23 @@ const CreateQuiz = () => {
               questionText: currentQuestionText,
               numberOfChoices: currentChoices.length,
               answers: currentChoices,
-              correctAnswerIndex: currentCorrectChoice,
+              correctAnswerIndex: currentCorrectChoice || question.correctAnswerIndex,
               questionImage: ''
             }
-            dispatch(updateQuestion(updatedQuestion));
             dispatch(currentQuestionNumber(currentQNumber + 1));
+            dispatch(setCorrectChoiceIndex(question.correctAnswerIndex));
+            dispatch(updateQuestion(updatedQuestion));
           }
         } else {
           if(isEditQuiz) {
+            console.log('current number');
+            console.log('current choice', currentCorrectChoice);
             const updatedQuestion = {
               order: currentQNumber,
               questionText: currentQuestionText,
               numberOfChoices: currentChoices.length,
               answers: currentChoices,
-              correctAnswerIndex: currentCorrectChoice,
+              correctAnswerIndex: currentCorrectChoice || question.correctAnswerIndex,
               questionImage: ''
             }
             dispatch(updateQuestion(updatedQuestion));

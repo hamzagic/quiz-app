@@ -73,7 +73,6 @@ const Question = () => {
   const handleChoiceQty = (e) => {
     const qty = parseInt(e.target.value);
     setChoiceQty(qty);
-    console.log(e.target.value);
     // Reset choices if the number changes
     setChoices(new Array(qty).fill(''));
   };

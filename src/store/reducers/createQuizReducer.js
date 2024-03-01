@@ -43,9 +43,9 @@ export const createQuizSlice = createSlice({
       state.quizImage = '';
       state.questions = [];
       state.currentQuestionText = '';
-      state.currentQuestionNumber = null;
+      state.currentQuestionNumber = '';
       state.choices = [];
-      state.correctAnswerIndex = null;
+      state.correctAnswerIndex = '';
       state.shouldReset = false;
     },
     updateQuestion: (state, action) => {
