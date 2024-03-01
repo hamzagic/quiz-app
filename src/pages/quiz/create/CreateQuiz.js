@@ -117,7 +117,7 @@ const CreateQuiz = () => {
     const data = {
       quizName: quizName,
       creator: "65ca1469366f6775cc068903",
-      totalQuestions: numberOfQuestions,
+      numberOfQuestions: numberOfQuestions,
       questions: questions
     }
     console.log(data)
