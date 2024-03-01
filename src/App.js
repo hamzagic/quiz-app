@@ -9,12 +9,14 @@ import NotFound from './pages/404/NotFound';
 // import Users from './pages/users/Users';
 import CreateQuiz from './pages/quiz/create/CreateQuiz';
 import Header from './components/header/Header';
+import QuizClient from './pages/quiz-client/QuizClient';
 
 import './App.scss';
 
 function App() {
   const loggedInUser = Cookies.get('token');
   const history = useHistory();
+  const isQuizClient = true;
 
   useEffect(() => {
     if(loggedInUser) {
@@ -22,7 +24,7 @@ function App() {
     } else {
       history.push("/login");
     }
-  }, [loggedInUser, history]);
+  }, [loggedInUser, history, isQuizClient]);
 
   if (loggedInUser && loggedInUser.length > 0) {
     return(
@@ -38,9 +40,10 @@ function App() {
     );
   } else {
     return(
-      <Route to="/login" component={Login} />
+      <Route path="/login" component={Login} />
     );
   }
+  <Route exact path="/client" component={QuizClient} />
 }
 
 export default App;

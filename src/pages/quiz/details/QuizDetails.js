@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { displayAddPanel } from '../../../store/reducers/quizReducer';
 import styles from './QuizDetails.module.scss';
@@ -19,14 +19,17 @@ import { isEdit, setId } from '../../../store/reducers/quizDetailReducer';
 
 const QuizDetails = (props) => {
     const showPanel = useSelector((state) => state.quiz.value);
-    const details = props.details;
+    let details = props.details;
     const dispatch = useDispatch();
     const token = Cookies.get('token');
     const decoded = jwtDecode(token);
     const history = useHistory();
+    const [message, setMessage] = useState('');
+    const [updatedQuizData, setUpdatedQuizData] = useState({});
 
     useEffect(() => {
-    }, [details, showPanel]);
+        console.log(details);
+    }, [details, showPanel,updatedQuizData]);
 
     const btnStyle = {
         border: 'none',
@@ -60,6 +63,7 @@ const QuizDetails = (props) => {
                 API.delete(`${apiConstants.quiz_delete}/${details.creator}/${details._id}`)
                 .then(res => {
                     console.log(res);
+                    details.sharedLink = res.data;
                     dispatch(displayAddPanel(false));
                 })
                 .catch(err => console.log(err));
@@ -68,7 +72,6 @@ const QuizDetails = (props) => {
     }
 
     const handleEdit = () => {
-        console.log(details);
         dispatch(displayAddPanel(false));
         dispatch(isEdit(true));
         dispatch(setId(details._id));
@@ -82,6 +85,22 @@ const QuizDetails = (props) => {
         history.push('quiz/create');
     }
 
+    const handleShare = () => {
+        const shareConfirm = window.confirm('Are you sure you want to share the quiz? This action cannot be undone.');
+        if (shareConfirm) {
+            const quizId =  details._id;
+            const creator = details.creator;
+            API.post(`quiz/share/${creator}/${quizId}`)
+            .then(res => {
+                console.log(res);
+                details = res.data.data;
+                setUpdatedQuizData(res.data.data);
+                setMessage('Quiz Shared Successfully!');
+            })
+            .catch(err => console.log(err));
+        }
+    }
+
     const buttonStyles = {
         backgroundColor: '#3f51b5',
         color: '#fff',
@@ -89,6 +108,16 @@ const QuizDetails = (props) => {
         padding: '5px 10px',
         fontWeight: 'bold',
         cursor: 'pointer',
+        borderRadius: '6px'
+    }
+
+    const disabledButtonStyles = {
+        cursor: 'not-allowed',
+        backgroundColor: '#ccc',
+        color: '#fff',
+        border: 'none',
+        padding: '5px 10px',
+        fontWeight: 'bold',
         borderRadius: '6px'
     }
 
@@ -152,8 +181,8 @@ const QuizDetails = (props) => {
                             )}
                     </div>
                     <div className={styles.buttonContainer}>
-                        <Button title="Share Quiz" styles={buttonStyles} />
-                        <Button title="Edit Quiz" styles={buttonStyles} click={handleEdit} />
+                        <Button title="Share Quiz" styles={details.isShared ? disabledButtonStyles : buttonStyles} click={handleShare} disabled={details.isShared} />
+                        {!details.isShared && <Button title="Edit Quiz" styles={buttonStyles} click={handleEdit} />}
                         <Button title="Delete Quiz" styles={redButton} click={handleDelete} />
                     </div>
                 </div>
