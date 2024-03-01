@@ -23,11 +23,11 @@ const Question = () => {
   const [choices, setChoices] = useState(currentQuestion.choices || []);
   const currentQuestionText = useSelector(state => state.createQuiz.currentQuestionText);
   const [correctChoice, setCorrectChoice] = useState(currentQuestion.correctAnswerIndex || -1);
+  const isEditQuiz = useSelector(state => state.quizDetails.isEdit);
   // Effect to load current question data
   useEffect(() => {
     const question = questions.find(q => q.order === currentQNumber);
     if (question) {
-      console.log('previous question exists', question);
       setQuestionText(question.questionText || '');
       setChoices(question.answers || []);
       // setCorrectChoice(question.correctAnswerIndex);
@@ -51,12 +51,18 @@ const Question = () => {
 
   const handleQuestionTextChange = (e) => {
     setQuestionText(e.target.value);
+    if(isEditQuiz) {
+      dispatch(addQuestionText(e.target.value));
+    }
   };
 
   const handleChoiceTextChange = (index, text) => {
     const updatedChoices = [...choices];
     updatedChoices[index] = text;
     setChoices(updatedChoices);
+    if(isEditQuiz) {
+      dispatch(addChoices(updatedChoices));
+    }
   };
 
   const handleCorrectChoiceChange = (index) => {

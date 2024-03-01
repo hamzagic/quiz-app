@@ -45,12 +45,26 @@ export const createQuizSlice = createSlice({
       state.shouldReset = action.payload;
     },
     deleteQuestion: (state, action) => {
-      state.questions = state.questions.filter(question => question.questionNumber !== action.payload) 
+      state.questions = state.questions.filter(question => question.order !== action.payload) 
     },
     resetQuiz: (state) => {
       state.quizName = '';
       state.quizImage = '';
       state.questions = [];
+    },
+    updateQuestion: (state, action) => {
+      const newQuestion = state.questions.map(question => 
+        question.order === action.payload.order ? {...question, 
+          questionText: action.payload.questionText,
+          answers: action.payload.answers,
+          correctAnswerIndex: action.payload.correctAnswerIndex,
+          questionImage: action.payload.questionImage
+        } : question
+      );
+      state.questions = newQuestion;
+    },
+    updateQuizName: (state, action) => {
+      state.quizName = action.payload
     }
   }
 });
@@ -66,7 +80,9 @@ export const {
   setCorrectChoiceIndex,
   resetQuestionComponent,
   deleteQuestion,
-  resetQuiz
+  resetQuiz,
+  updateQuestion,
+  updateQuizName
 } = createQuizSlice.actions;
 
 export default createQuizSlice.reducer;

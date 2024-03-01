@@ -10,7 +10,8 @@ import {
   addNumberOfChoices, 
   addChoices, 
   setCorrectChoiceIndex,
-  resetQuiz
+  resetQuiz,
+  updateQuestion
 } from "../../../store/reducers/createQuizReducer";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import styles from "./CreateQuiz.module.scss";
@@ -21,6 +22,7 @@ import { apiConstants } from "../../../constants/constants";
 import Validator from "../../../utils/validator";
 import Question from "../../../components/question/Question";
 import { FaAngleLeft } from "react-icons/fa";
+import { isEdit } from "../../../store/reducers/quizDetailReducer";
 
 const CreateQuiz = () => {
   const [name, setName] = useState("");
@@ -35,15 +37,13 @@ const CreateQuiz = () => {
   const currentChoices = useSelector(state => state.createQuiz.choices);
   const currentCorrectChoice = useSelector(state => state.createQuiz.correctAnswerIndex);
   const numberOfChoices = useSelector(state => state.createQuiz.numberOfChoices);
-  const mustReset = useSelector(state => state.createQuiz.shouldReset);
   const quizQuestions = useSelector(state => state.createQuiz.questions);
+  const isEditQuiz = useSelector(state => state.quizDetails.isEdit);
 
   useEffect(() => {
     if(quizName) setName(quizName);
-    if(mustReset) {
-      console.log('reset');
-    } 
-  },[mustReset, dispatch, numberOfChoices, quizName]);
+   
+  },[dispatch, numberOfChoices, quizName, currentChoices]);
 
   const history = useHistory();
 
@@ -134,6 +134,7 @@ const CreateQuiz = () => {
           dispatch(resetQuiz());
           clearFields();
           setShowQuestions(false);
+          dispatch(isEdit(false));
         }
       })
       .catch((err) => {
@@ -144,6 +145,7 @@ const CreateQuiz = () => {
   const handleCancelClick = () => {
     setShowQuestions(false);
     dispatch(resetQuiz());
+    dispatch(isEdit(false));
     history.push('/quiz');
   };
 
@@ -175,23 +177,30 @@ const CreateQuiz = () => {
   };
 
   const handleNextQuestion = () => {
-    console.log('current number', currentQNumber);
     // if (quizQuestions && quizQuestions.length > currentQNumber) {
-    if (currentQNumber < quizQuestions && quizQuestions.length) {
-      // that means we have already a next question created
-      // we just need to load the data
+      if (currentQNumber < quizQuestions.length) {
       quizQuestions.filter(question => {
-        console.log('next question exists', question);
         if (question.order === currentQNumber + 1) {
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.questionText));
           dispatch(addChoices(question.answers));
           dispatch(setCorrectChoiceIndex(question.correctAnswerIndex));
+          
+          if (isEditQuiz) {
+            const updatedQuestion = {
+              order: currentQNumber,
+              questionText: currentQuestionText,
+              numberOfChoices: currentChoices.length,
+              answers: currentChoices,
+              correctAnswerIndex: currentCorrectChoice,
+              questionImage: ''
+            }
+            dispatch(updateQuestion(updatedQuestion));
+          }
         }
         return question.order === currentQNumber + 1;
       });
     } else {
-      console.log('next question does not exist');
       const currentQuestion = {
         order: currentQNumber,
         questionText: currentQuestionText,
@@ -223,7 +232,6 @@ const CreateQuiz = () => {
     const previousQuestion = quizQuestions.filter(question => 
       question && question.order === currentQNumber - 1);
     
-    console.log('previousQuestion', previousQuestion);
     dispatch(addQuestionText(previousQuestion && previousQuestion[0].questionText));
     dispatch(addChoices(previousQuestion && previousQuestion[0].answers));
     dispatch(addNumberOfChoices(previousQuestion && previousQuestion[0].answers.numberOfChoices));
