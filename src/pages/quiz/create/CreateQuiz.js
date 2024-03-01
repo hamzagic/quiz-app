@@ -122,10 +122,8 @@ const CreateQuiz = () => {
     }
     console.log(data)
     if(isEditQuiz) {
-      console.log('isEdit');
       await API.post('quiz/update/' + quizId, data)
       .then(res => {
-        console.log('res', res.data.data);
         setMessage("Quiz updated successfully!");
         dispatch(resetQuiz());
         clearFields();
@@ -135,7 +133,6 @@ const CreateQuiz = () => {
       })
       .catch(err => console.log(err));
     } else {
-      console.log('is new');
       await API.post(apiConstants.quiz_post, data, {
       })
         .then((res) => {
@@ -199,7 +196,7 @@ const CreateQuiz = () => {
 
   const handleNextQuestion = () => {
     // if (quizQuestions && quizQuestions.length > currentQNumber) {
-      if (currentQNumber < quizQuestions.length) {
+      if (currentQNumber <= quizQuestions.length) {
       quizQuestions.filter(question => {
         if (question.order === currentQNumber + 1) {
           dispatch(currentQuestionNumber(currentQNumber + 1));
@@ -217,6 +214,20 @@ const CreateQuiz = () => {
               questionImage: ''
             }
             dispatch(updateQuestion(updatedQuestion));
+            dispatch(currentQuestionNumber(currentQNumber + 1));
+          }
+        } else {
+          if(isEditQuiz) {
+            const updatedQuestion = {
+              order: currentQNumber,
+              questionText: currentQuestionText,
+              numberOfChoices: currentChoices.length,
+              answers: currentChoices,
+              correctAnswerIndex: currentCorrectChoice,
+              questionImage: ''
+            }
+            dispatch(updateQuestion(updatedQuestion));
+            dispatch(currentQuestionNumber(currentQNumber + 1));
           }
         }
         return question.order === currentQNumber + 1;
@@ -230,10 +241,12 @@ const CreateQuiz = () => {
         correctAnswerIndex: currentCorrectChoice,
         questionImage: ''
       }
-      console.log('object', currentQuestion);
       if (currentQNumber && currentQuestionText && currentChoices.length > 0) {
         const questionExists = quizQuestions.some(el => el.order === currentQNumber);
-        if (!questionExists) saveQuestionToStore(currentQuestion);
+        if (!questionExists) {
+          console.log('question does not exist')
+          saveQuestionToStore(currentQuestion);
+        };
       } else {
         console.log('could not save question');
       }

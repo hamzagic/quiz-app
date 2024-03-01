@@ -5,16 +5,7 @@ export const createQuizSlice = createSlice({
   initialState: {
     quizName: '',
     quizImage: '',
-    questions: [
-      // {
-      //   questionNumber: '',
-      //   questionText: '',
-      //   numberOfChoices: '',
-      //   questionImage: '',
-      //   choices: [],
-      //   correctChoice: ''
-      // }
-    ],
+    questions: [],
   },
   reducers: {
     addQuizName: (state, action) => {
