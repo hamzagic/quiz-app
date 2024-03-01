@@ -51,6 +51,11 @@ export const createQuizSlice = createSlice({
       state.quizName = '';
       state.quizImage = '';
       state.questions = [];
+      state.currentQuestionText = '';
+      state.currentQuestionNumber = null;
+      state.choices = [];
+      state.correctAnswerIndex = null;
+      state.shouldReset = false;
     },
     updateQuestion: (state, action) => {
       const newQuestion = state.questions.map(question => 
