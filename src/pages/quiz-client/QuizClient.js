@@ -1,8 +1,15 @@
 import { useEffect } from "react";
+import API from '../../routes/api';
 
 const QuizClient = (props) => {
+  const id = props.match.params.id || '';
+  API.get('client/'+id)
+  .then(res => {
+    console.log(res);
+  })
+  .catch(err => console.log(err));
   useEffect(() => {
-    console.log(props.match.params.id)
+    
   },[]);
   return(
     <div>
