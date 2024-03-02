@@ -4,6 +4,7 @@ import API from '../../routes/api';
 import Button from "../../components/button/Button";
 import { addCurrentQuestion, storeLoadedQuiz } from "../../store/reducers/quizClientReducer";
 import Input from "../../components/input/Input";
+import Validator from "../../utils/validator";
 
 const QuizClient = (props) => {
   const id = props.match.params.id || '';
@@ -14,6 +15,9 @@ const QuizClient = (props) => {
   const [email, setEmail] = useState('');
   const [answer, setAnswer] = useState('');
   const [answers, setAnswers] = useState([]);
+  const [emailError, setEmailError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [checkError, setCheckError] = useState('');
   const [isFinishedQuiz, setIsFinishedQuiz] = useState(false);
   const loadedQuiz = useSelector(state => state.quizClient.loadedQuiz);
   const dispatch = useDispatch();
@@ -31,22 +35,60 @@ const QuizClient = (props) => {
   },[id, currentQuestion, dispatch, isFinishedQuiz]);
 
   const handlePreviousQuestion = () => {
-    if (currentQuestion >= 0) {
+    if (currentQuestion >= 1) {
       setCurrentQuestion(currentQuestion - 1);
       dispatch(addCurrentQuestion(currentQuestion - 1));
     }
   }
 
   const handleNextQuestion = () => {
+    if(!answer) {
+      setCheckError('You need to choose an alternative');
+      return;
+    }
     if (currentQuestion + 1 <= questionQty) {
       setCurrentQuestion(currentQuestion + 1);
       dispatch(addCurrentQuestion(currentQuestion + 1));
+      setCheckError('');
+      setAnswer('');
     }
 
     if (currentQuestion + 1 === questionQty) {
       setIsFinishedQuiz(true);
+      setCheckError('');
+      setAnswer('');
     }
   }
+
+  const validateFields = () => {
+    let errors = true;
+    const validator = new Validator();
+    const isInvalidEmail = email.length > 0 && validator.email(email);
+    const isInvalidName = validator.required(name);
+
+    if (isInvalidEmail) {
+      setEmailError(isInvalidEmail);
+    } else {
+      setEmailError("");
+    }
+
+    if (isInvalidName) {
+      setNameError(isInvalidName);
+    } else {
+      setNameError("");
+    }
+
+    if (
+      isInvalidEmail === undefined &&
+      isInvalidName === undefined
+    ) {
+      errors = false;
+    } else {
+      errors = true;
+    }
+
+    return errors;
+  };
 
   const handleName = (e) => {
     setName(e.target.value);
@@ -58,6 +100,8 @@ const QuizClient = (props) => {
 
   const handleSubmit = () => {
     console.log(answers);
+    const hasErrors = validateFields();
+
   }
 
   const handleAnswer = (e) => {
@@ -69,8 +113,9 @@ const QuizClient = (props) => {
   return(
     <div>
       <h1>{quiz.quizName}</h1>
-      <div>
-        <p>{ currentQuestion + 1 } - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? 'Default Here'}</p>
+      {!isFinishedQuiz && 
+        <div>
+        <p>{ currentQuestion + 1 } - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? ''}</p>
         { loadedQuiz.questions?.[currentQuestion]?.answers?.map((answer, index) => 
               <ul key={index}>
                 <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={handleAnswer} value={index} /><span>{answer}</span></li>
@@ -79,21 +124,25 @@ const QuizClient = (props) => {
         <div>
           <Button title="Previous Question" click={handlePreviousQuestion} />
           <Button title={currentQuestion + 1 === questionQty ? "Finish Quiz" : "Next Question"} click={handleNextQuestion} />
-        </div>
-          {isFinishedQuiz && 
+        </div> 
+        {checkError && <p>{checkError}</p>}
+      </div>
+      }
+      {isFinishedQuiz && 
             <div>
               <div>
                 <p>Please enter your name:</p>
                 <Input type="text" placeholder="Your name" onChange={handleName} value={name} />
+                {nameError && <p>{nameError}</p>}
               </div>
               <div>
                 <p>Please enter your email address(optional):</p>
                 <Input type="email" placeholder="Email" onChange={handleEmail} value={email} />
+                {emailError && <p>{emailError}</p>}
               </div>
               <Button title="Submit Quiz" click={handleSubmit} />
             </div>
           }
-      </div>
     </div>
   );
 }

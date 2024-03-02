@@ -95,7 +95,6 @@ const Profile = () => {
   };
 
   const submitEditProfile = (e) => {
-    console.log("clicked");
     const hasErrors = validateFields();
     console.log(hasErrors);
     if (!hasErrors) {
