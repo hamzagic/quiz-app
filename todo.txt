@@ -24,4 +24,4 @@ Analytics for people who has answered
 Analytics for quiz results
 Signup page
 Notifications - whenever someone answers the quiz
-Google Analytics for landing page, signup and logged in screens.
+Google Analytics for landing page, signup and logged in screens (maybe I can create my own analytics, a simpler and basic one)

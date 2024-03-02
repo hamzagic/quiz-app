@@ -19,6 +19,9 @@ const QuizClient = (props) => {
   const [nameError, setNameError] = useState('');
   const [checkError, setCheckError] = useState('');
   const [isFinishedQuiz, setIsFinishedQuiz] = useState(false);
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const loadedQuiz = useSelector(state => state.quizClient.loadedQuiz);
   const dispatch = useDispatch();
  
@@ -99,8 +102,33 @@ const QuizClient = (props) => {
   }
 
   const handleSubmit = () => {
-    console.log(answers);
+    setMessage('');
+    setErrorMessage('');
+    const data = {
+      name,
+      email,
+      answers,
+      quizToken: id
+    }; 
     const hasErrors = validateFields();
+    if(!hasErrors) {
+      API.post('quiz/attempt', data)
+      .then(res => {
+        if (res.data.message) {
+          setMessage(res.data.message);
+          setAnswers([]);
+          setName('');
+          setEmail('');
+          setAnswer('');
+          setIsSubmitted(true);
+        } else if (res.data.error) {
+          setErrorMessage(res.data.error);
+        }
+      })
+      .catch(err => {
+        setErrorMessage(err);
+      });
+    }
 
   }
 
@@ -128,7 +156,7 @@ const QuizClient = (props) => {
         {checkError && <p>{checkError}</p>}
       </div>
       }
-      {isFinishedQuiz && 
+      {isFinishedQuiz && !isSubmitted && 
             <div>
               <div>
                 <p>Please enter your name:</p>
@@ -141,6 +169,16 @@ const QuizClient = (props) => {
                 {emailError && <p>{emailError}</p>}
               </div>
               <Button title="Submit Quiz" click={handleSubmit} />
+              {message && <p>{message}</p>}
+              {errorMessage && <p>{errorMessage}</p>}
+            </div>
+          }
+          {
+            isSubmitted && 
+            <div>
+              <h2>Thank you for answering this quiz!</h2>
+              <p>Display results</p>
+              <p>Todo: More text and links for the product</p>
             </div>
           }
     </div>
