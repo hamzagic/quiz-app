@@ -17,14 +17,16 @@ function App() {
   const loggedInUser = Cookies.get('token');
   const history = useHistory();
   const isQuizClient = true;
+  const pathname = window.location.pathname;
 
   useEffect(() => {
+    console.log(window.location.search)
     if(loggedInUser) {
       history.push("/dashboard");
-    } else {
-      history.push("/login");
-    }
-  }, [loggedInUser, history, isQuizClient]);
+    } else if (!loggedInUser && !pathname.includes('/client')) {
+      history.push("/login"); 
+    } 
+  }, [loggedInUser, history, isQuizClient, pathname]);
 
   if (loggedInUser && loggedInUser.length > 0) {
     return(
@@ -38,12 +40,15 @@ function App() {
       {/* <Route path="/users" component={Users} /> */}
     </div>
     );
+  } else if(!loggedInUser && pathname.includes('/client')) {
+    return(
+      <Route path="/client/:id" component={QuizClient} />
+    );
   } else {
     return(
       <Route path="/login" component={Login} />
     );
   }
-  <Route exact path="/client" component={QuizClient} />
 }
 
 export default App;

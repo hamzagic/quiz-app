@@ -1,4 +1,9 @@
+import { useEffect } from "react";
+
 const QuizClient = (props) => {
+  useEffect(() => {
+    console.log(props.match.params.id)
+  },[]);
   return(
     <div>
       <h1>Quiz Name</h1>

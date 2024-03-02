@@ -26,8 +26,10 @@ const QuizDetails = (props) => {
     const history = useHistory();
     const [message, setMessage] = useState('');
     const [updatedQuizData, setUpdatedQuizData] = useState({});
+    const shareLinkPath = 'localhost:3000/client/'
 
     useEffect(() => {
+        console.log(process.env.NODE_ENV)
         console.log(details);
     }, [details, showPanel,updatedQuizData]);
 
@@ -180,11 +182,17 @@ const QuizDetails = (props) => {
                                 </div>
                             )}
                     </div>
+                    <div className={styles.itemContainer}>
+                        {/* todo: all full path in the link, not only the token */}
+                        <div className={styles.detailTitle}>Share Link:</div>
+                        <div>{ details.sharedLink || 'Not shared yet'}</div>
+                    </div>
                     <div className={styles.buttonContainer}>
                         <Button title="Share Quiz" styles={details.isShared ? disabledButtonStyles : buttonStyles} click={handleShare} disabled={details.isShared} />
                         {!details.isShared && <Button title="Edit Quiz" styles={buttonStyles} click={handleEdit} />}
                         <Button title="Delete Quiz" styles={redButton} click={handleDelete} />
                     </div>
+                    <div>{message}</div>
                 </div>
             </div> 
         }
