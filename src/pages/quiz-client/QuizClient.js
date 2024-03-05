@@ -5,6 +5,7 @@ import Button from "../../components/button/Button";
 import { addCurrentQuestion, storeLoadedQuiz } from "../../store/reducers/quizClientReducer";
 import Input from "../../components/input/Input";
 import Validator from "../../utils/validator";
+import styles from './QuizClient.module.scss';
 
 const QuizClient = (props) => {
   const id = props.match.params.id || '';
@@ -15,6 +16,7 @@ const QuizClient = (props) => {
   const [email, setEmail] = useState('');
   const [answer, setAnswer] = useState('');
   const [answers, setAnswers] = useState([]);
+  const [differences, setDifferences] = useState({});
   const [emailError, setEmailError] = useState('');
   const [nameError, setNameError] = useState('');
   const [checkError, setCheckError] = useState('');
@@ -24,18 +26,24 @@ const QuizClient = (props) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const loadedQuiz = useSelector(state => state.quizClient.loadedQuiz);
   const dispatch = useDispatch();
+  const [invalidQuiz, setInvalidQuiz] = useState(false);
+  const [updatedQuiz, setUpdatedQuiz] = useState({});
  
   useEffect(() => {
     API.get('client/'+id)
     .then(res => {
+      console.log(res.data.data)
       setQuiz(res.data.data);
       setQuestionQty(res.data.data.questions.length);
       dispatch(storeLoadedQuiz(res.data.data));
       // setCurrentQuestion(1);
       dispatch(addCurrentQuestion(1));
     })
-    .catch(err => console.log(err));
-  },[id, currentQuestion, dispatch, isFinishedQuiz]);
+    .catch(err => {
+      setInvalidQuiz(true);
+      console.log(err)
+    });
+  },[id, currentQuestion, dispatch, isFinishedQuiz, differences]);
 
   const handlePreviousQuestion = () => {
     if (currentQuestion >= 1) {
@@ -114,8 +122,11 @@ const QuizClient = (props) => {
     if(!hasErrors) {
       API.post('quiz/attempt', data)
       .then(res => {
+        console.log('res', res);
         if (res.data.message) {
           setMessage(res.data.message);
+          setDifferences(res.data.result.differences);
+          setUpdatedQuiz(res.data.result.quiz);
           setAnswers([]);
           setName('');
           setEmail('');
@@ -128,57 +139,109 @@ const QuizClient = (props) => {
       .catch(err => {
         setErrorMessage(err);
       });
+    } else {
+      console.log('some error ocurred');
     }
 
   }
 
   const handleAnswer = (e) => {
     setAnswer(e.target.value);
-    const updatedAnswer = [...answers, e.target.value];
+    const updatedAnswer = [...answers, parseInt(e.target.value)];
     setAnswers(updatedAnswer);
   }
 
+  const getScore = () => {
+    const totalQuestions = quiz.questions.length;
+    const totalErrors = differences.length;
+    return `${totalQuestions - totalErrors} / ${totalQuestions}`;
+  }
+
+  const isIncorrectAnswer = (index, answerIndex) => differences.filter(diff =>
+    diff.questionIndex === index && diff.answered === answerIndex).length > 0;
+
+
+  const isCorrectAnswer = (index, i) => updatedQuiz.questions.filter((question, ind) =>
+    index === ind && question.correctAnswerIndex === i).length > 0;
+ 
+  const btnStyle = {
+    backgroundColor: '#6622CC',
+    color: '#fff',
+    border: 'none',
+    padding: '8px 16px',
+    borderRadius: '6px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    cursor: 'pointer'
+  }
+
+  const btnDisabled = {
+    cursor: 'not-allowed',
+    backgroundColor: '#ddd'
+  }
+
+  const inputStyle = {
+    padding: '5px',
+    width: '100%',
+    borderWidth: '1px',
+    borderRadius: '6px'
+  }
+
   return(
-    <div>
+    <div className={styles.container}>
       <h1>{quiz.quizName}</h1>
       {!isFinishedQuiz && 
-        <div>
-        <p>{ currentQuestion + 1 } - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? ''}</p>
+        <div className={styles.questionsContainer}>
+        <p className={styles.questionTitle}><span className={styles.questionNumber}>{ currentQuestion + 1 }</span> - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? ''}</p>
         { loadedQuiz.questions?.[currentQuestion]?.answers?.map((answer, index) => 
               <ul key={index}>
-                <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={handleAnswer} value={index} /><span>{answer}</span></li>
+                <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={handleAnswer} value={index} /><span className={styles.answerText}>{answer}</span></li>
               </ul>
         )}
-        <div>
-          <Button title="Previous Question" click={handlePreviousQuestion} />
-          <Button title={currentQuestion + 1 === questionQty ? "Finish Quiz" : "Next Question"} click={handleNextQuestion} />
+        <div className={styles.buttonsContainer}>
+          <Button title="Previous Question" styles={btnStyle} click={handlePreviousQuestion} />
+          <Button title={currentQuestion + 1 === questionQty ? "Finish Quiz" : "Next Question"} styles={btnStyle} click={handleNextQuestion} />
         </div> 
         {checkError && <p>{checkError}</p>}
       </div>
       }
       {isFinishedQuiz && !isSubmitted && 
-            <div>
-              <div>
-                <p>Please enter your name:</p>
-                <Input type="text" placeholder="Your name" onChange={handleName} value={name} />
+            <div className={styles.submitContainer}>
+              <div className={styles.inputContainer}>
+                <p className={styles.questionTitle}>Enter your name:</p>
+                <Input type="text" placeholder="Your name" styles={inputStyle} onChange={handleName} value={name} />
                 {nameError && <p>{nameError}</p>}
               </div>
-              <div>
-                <p>Please enter your email address(optional):</p>
-                <Input type="email" placeholder="Email" onChange={handleEmail} value={email} />
+              <div className={styles.inputContainer}>
+                <p className={styles.questionTitle}>Enter your email address(optional):</p>
+                <Input type="email" placeholder="Email" styles={inputStyle} onChange={handleEmail} value={email} />
                 {emailError && <p>{emailError}</p>}
               </div>
-              <Button title="Submit Quiz" click={handleSubmit} />
+              <Button title="Submit Quiz" styles={btnStyle} click={handleSubmit} />
               {message && <p>{message}</p>}
               {errorMessage && <p>{errorMessage}</p>}
             </div>
           }
           {
             isSubmitted && 
-            <div>
+            <div className={styles.resultsContainer}>
               <h2>Thank you for answering this quiz!</h2>
-              <p>Display results</p>
-              <p>Todo: More text and links for the product</p>
+              {/* Create a component for results */}
+              <h3>Your Results</h3>
+              <p>Your score: {getScore()}</p>
+              <div className={styles.questionsResultContainer}>
+                {quiz.questions.map((question, index) =>
+                  <div key={index}>
+                    <h3>{question.questionText}</h3>
+                    {question.answers.map((answer, i) => 
+                      <div key={i}>
+                        <p className={isIncorrectAnswer(index, i) ? styles.incorrectAnswer : isCorrectAnswer(index, i) ? styles.correctAnswer : ''}>{answer}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <hr />
             </div>
           }
     </div>
