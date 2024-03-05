@@ -32,11 +32,13 @@ const QuizClient = (props) => {
   useEffect(() => {
     API.get('client/'+id)
     .then(res => {
-      console.log(res.data.data)
+      if(!res.data.data) {
+        setInvalidQuiz(true);
+        return;
+      }
       setQuiz(res.data.data);
       setQuestionQty(res.data.data.questions.length);
       dispatch(storeLoadedQuiz(res.data.data));
-      // setCurrentQuestion(1);
       dispatch(addCurrentQuestion(1));
     })
     .catch(err => {
@@ -153,11 +155,11 @@ const QuizClient = (props) => {
 
   const getScore = () => {
     const totalQuestions = quiz.questions.length;
-    const totalErrors = differences.length;
+    const totalErrors = differences && differences.length > 0 ? differences.length : 0;
     return `${totalQuestions - totalErrors} / ${totalQuestions}`;
   }
 
-  const isIncorrectAnswer = (index, answerIndex) => differences.filter(diff =>
+  const isIncorrectAnswer = (index, answerIndex) => differences && differences.filter(diff =>
     diff.questionIndex === index && diff.answered === answerIndex).length > 0;
 
 
@@ -187,9 +189,20 @@ const QuizClient = (props) => {
     borderRadius: '6px'
   }
 
+ 
+
   return(
     <div className={styles.container}>
-      <h1>{quiz.quizName}</h1>
+      {invalidQuiz && 
+        <div className={styles.invalidQuiz}>
+          <h1>This quiz does not exist!</h1>
+          <p>Please check the provided link again.</p>
+        </div>
+      }
+
+      {!invalidQuiz && 
+        <>
+        <h1>{quiz.quizName}</h1>
       {!isFinishedQuiz && 
         <div className={styles.questionsContainer}>
         <p className={styles.questionTitle}><span className={styles.questionNumber}>{ currentQuestion + 1 }</span> - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? ''}</p>
@@ -244,6 +257,8 @@ const QuizClient = (props) => {
               <hr />
             </div>
           }
+        </>
+      }
     </div>
   );
 }

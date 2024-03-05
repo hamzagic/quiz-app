@@ -58,4 +58,11 @@
     color: #fff;
     font-weight: bold;
   }
+
+  .invalidQuiz {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
