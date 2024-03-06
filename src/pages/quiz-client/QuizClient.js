@@ -63,7 +63,6 @@ const QuizClient = (props) => {
       setCurrentQuestion(currentQuestion + 1);
       dispatch(addCurrentQuestion(currentQuestion + 1));
       setCheckError('');
-      setAnswer('');
     }
 
     if (currentQuestion + 1 === questionQty) {
@@ -92,7 +91,7 @@ const QuizClient = (props) => {
     }
 
     if (
-      isInvalidEmail === undefined &&
+      (isInvalidEmail === false || isInvalidEmail === undefined) &&
       isInvalidName === undefined
     ) {
       errors = false;
@@ -172,7 +171,12 @@ const QuizClient = (props) => {
 
   const btnDisabled = {
     cursor: 'not-allowed',
-    backgroundColor: '#ddd'
+    backgroundColor: '#ddd',
+    border: 'none',
+    padding: '8px 16px',
+    borderRadius: '6px',
+    fontSize: '16px',
+    fontWeight: 'bold',
   }
 
   const inputStyle = {
@@ -205,7 +209,7 @@ const QuizClient = (props) => {
               </ul>
         )}
         <div className={styles.buttonsContainer}>
-          <Button title="Previous Question" styles={btnStyle} click={handlePreviousQuestion} />
+          <Button title="Previous Question" styles={currentQuestion === 0 ? btnDisabled : btnStyle} click={handlePreviousQuestion} disabled={currentQuestion < 1} />
           <Button title={currentQuestion + 1 === questionQty ? "Finish Quiz" : "Next Question"} styles={btnStyle} click={handleNextQuestion} />
         </div> 
         {checkError && <p>{checkError}</p>}
@@ -234,21 +238,19 @@ const QuizClient = (props) => {
               <h2>Thank you for answering this quiz!</h2>
               {/* Create a component for results */}
               <h3>Your Results</h3>
-              <p>Your score: {score}</p>
+              <p className={styles.score}>Your score: {score}</p>
               <div className={styles.questionsResultContainer}>
                 {quiz.questions.map((question, index) =>
-                  <div key={index}>
+                  <div key={index} className={styles.answerContainer}>
                     <h3>{question.questionText}</h3>
                     {question.answers.map((answer, i) => 
                       <div key={i}>
-                        {/* <p className={isIncorrectAnswer(index, i) ? styles.incorrectAnswer : isCorrectAnswer(index, i) ? styles.correctAnswer : ''}>{answer}</p> */}
                         <p className={getCorrectAnswer(index, i) ? styles.correctAnswer : getIncorrectAnswer(index, i) ? styles.incorrectAnswer : ''}>{answer}</p>
                       </div>
                     )}
                   </div>
                 )}
               </div>
-              <hr />
             </div>
           }
         </>

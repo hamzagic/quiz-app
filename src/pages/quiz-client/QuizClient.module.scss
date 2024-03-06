@@ -45,15 +45,21 @@
     align-items: center;
   }
 
+  .score {
+    background-color: #50abe0;
+    padding: 4px 16px;
+    color: #fff;
+  }
+
   .correctAnswer {
-    background-color: green;
+    background-color: #50e050;
     padding: 3px 0;
     color: #fff;
     font-weight: bold;
   }
 
   .incorrectAnswer {
-    background-color: red;
+    background-color: rgb(247, 117, 117);
     padding: 3px 0;
     color: #fff;
     font-weight: bold;
@@ -64,5 +70,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .answerContainer {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
   }
 }
