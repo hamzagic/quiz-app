@@ -27,7 +27,7 @@ const QuizClient = (props) => {
   const loadedQuiz = useSelector(state => state.quizClient.loadedQuiz);
   const dispatch = useDispatch();
   const [invalidQuiz, setInvalidQuiz] = useState(false);
-  const [updatedQuiz, setUpdatedQuiz] = useState({});
+  const [score, setScore] = useState('');
  
   useEffect(() => {
     API.get('client/'+id)
@@ -127,8 +127,8 @@ const QuizClient = (props) => {
         console.log('res', res);
         if (res.data.message) {
           setMessage(res.data.message);
-          setDifferences(res.data.result.differences);
-          setUpdatedQuiz(res.data.result.quiz);
+          setDifferences(res.data.result.answerData);
+          setScore(res.data.result.score);
           setAnswers([]);
           setName('');
           setEmail('');
@@ -153,19 +153,12 @@ const QuizClient = (props) => {
     setAnswers(updatedAnswer);
   }
 
-  const getScore = () => {
-    const totalQuestions = quiz.questions.length;
-    const totalErrors = differences && differences.length > 0 ? differences.length : 0;
-    return `${totalQuestions - totalErrors} / ${totalQuestions}`;
-  }
+  const getCorrectAnswer = (index, i) => differences.filter(diff => 
+    diff.questionIndex === index && diff.correct === i).length > 0;
+  
+  const getIncorrectAnswer = (index, i) => differences.filter(diff => 
+    diff.questionIndex === index && diff.answered === i).length > 0;
 
-  const isIncorrectAnswer = (index, answerIndex) => differences && differences.filter(diff =>
-    diff.questionIndex === index && diff.answered === answerIndex).length > 0;
-
-
-  const isCorrectAnswer = (index, i) => updatedQuiz.questions.filter((question, ind) =>
-    index === ind && question.correctAnswerIndex === i).length > 0;
- 
   const btnStyle = {
     backgroundColor: '#6622CC',
     color: '#fff',
@@ -241,14 +234,15 @@ const QuizClient = (props) => {
               <h2>Thank you for answering this quiz!</h2>
               {/* Create a component for results */}
               <h3>Your Results</h3>
-              <p>Your score: {getScore()}</p>
+              <p>Your score: {score}</p>
               <div className={styles.questionsResultContainer}>
                 {quiz.questions.map((question, index) =>
                   <div key={index}>
                     <h3>{question.questionText}</h3>
                     {question.answers.map((answer, i) => 
                       <div key={i}>
-                        <p className={isIncorrectAnswer(index, i) ? styles.incorrectAnswer : isCorrectAnswer(index, i) ? styles.correctAnswer : ''}>{answer}</p>
+                        {/* <p className={isIncorrectAnswer(index, i) ? styles.incorrectAnswer : isCorrectAnswer(index, i) ? styles.correctAnswer : ''}>{answer}</p> */}
+                        <p className={getCorrectAnswer(index, i) ? styles.correctAnswer : getIncorrectAnswer(index, i) ? styles.incorrectAnswer : ''}>{answer}</p>
                       </div>
                     )}
                   </div>
