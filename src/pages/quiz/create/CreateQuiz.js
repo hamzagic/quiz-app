@@ -227,10 +227,10 @@ const CreateQuiz = () => {
   }
 
   const handleNextQuestion = () => {
-    // if(!validateCurrentQuestion(currentQuestionText) || validateCurrentChoices(currentChoices) > 0) {
-    //   console.log(validateCurrentQuestion(currentQuestionText),validateCurrentChoices(currentChoices) > 0);
-    //   return;
-    // }
+    if(!validateCurrentQuestion(currentQuestionText) || validateCurrentChoices(currentChoices) > 0) {
+      console.log(validateCurrentQuestion(currentQuestionText),validateCurrentChoices(currentChoices) > 0);
+      return;
+    }
       if (currentQNumber <= quizQuestions.length) {
       quizQuestions.filter(question => {
         if (question.order === currentQNumber + 1) {

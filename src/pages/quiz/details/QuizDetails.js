@@ -26,12 +26,14 @@ const QuizDetails = (props) => {
     const history = useHistory();
     const [message, setMessage] = useState('');
     const [updatedQuizData, setUpdatedQuizData] = useState({});
-    const shareLinkPath = 'localhost:3000/client/'
+    const shareLinkPath = 'localhost:3000/client/';
+    const [isShared, setIsShared] = useState(false);
 
     useEffect(() => {
         console.log(process.env.NODE_ENV)
         console.log(details);
-    }, [details, showPanel,updatedQuizData]);
+        console.log('shared', isShared)
+    }, [details, showPanel,updatedQuizData, isShared]);
 
     const btnStyle = {
         border: 'none',
@@ -65,7 +67,6 @@ const QuizDetails = (props) => {
                 API.delete(`${apiConstants.quiz_delete}/${details.creator}/${details._id}`)
                 .then(res => {
                     console.log(res);
-                    details.sharedLink = res.data;
                     dispatch(displayAddPanel(false));
                 })
                 .catch(err => console.log(err));
@@ -95,6 +96,7 @@ const QuizDetails = (props) => {
             API.post(`quiz/share/${creator}/${quizId}`)
             .then(res => {
                 console.log(res);
+                setIsShared(true);
                 details = res.data.data;
                 setUpdatedQuizData(res.data.data);
                 setMessage('Quiz Shared Successfully!');
@@ -188,11 +190,11 @@ const QuizDetails = (props) => {
                         <div>{ details.sharedLink || 'Not shared yet'}</div>
                     </div>
                     <div className={styles.buttonContainer}>
-                        <Button title="Share Quiz" styles={details.isShared ? disabledButtonStyles : buttonStyles} click={handleShare} disabled={details.isShared} />
-                        {!details.isShared && <Button title="Edit Quiz" styles={buttonStyles} click={handleEdit} />}
+                        <Button title="Share Quiz" styles={details.isShared || isShared ? disabledButtonStyles : buttonStyles} click={handleShare} disabled={details.isShared} />
+                        {!details.isShared && !isShared && <Button title="Edit Quiz" styles={buttonStyles} click={handleEdit} />}
                         <Button title="Delete Quiz" styles={redButton} click={handleDelete} />
                     </div>
-                    <div>{message}</div>
+                    <div className={styles.successShare}>{message}</div>
                 </div>
             </div> 
         }
