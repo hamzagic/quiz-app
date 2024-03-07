@@ -18,11 +18,10 @@ const Question = () => {
   const questions = useSelector(state => state.createQuiz.questions);
   const currentQuestion = questions.find(q => q.questionNumber === currentQNumber) || {};
   const [choiceQty, setChoiceQty] = useState(currentQuestion.numberOfChoices || 0);
-  // Initialize component state
   const [questionText, setQuestionText] = useState(currentQuestion.questionText || '');
   const [choices, setChoices] = useState(currentQuestion.choices || []);
   const currentQuestionText = useSelector(state => state.createQuiz.currentQuestionText);
-  const [correctChoice, setCorrectChoice] = useState(currentQuestion.correctAnswerIndex || -1);
+  const [correctChoice, setCorrectChoice] = useState(currentQuestion.correctAnswerIndex || 0);
   const isEditQuiz = useSelector(state => state.quizDetails.isEdit);
   // Effect to load current question data
   useEffect(() => {
@@ -42,7 +41,6 @@ const Question = () => {
       setChoiceQty(0);
     }
   }, [currentQNumber, questions]);
-
   // Update Redux store when component state changes
   useEffect(() => {
     dispatch(addQuestionText(questionText));
@@ -78,7 +76,6 @@ const Question = () => {
   };
 
   const handleDeleteQuestion = () => {
-    console.log(currentQNumber)
     dispatch(deleteQuestion(currentQNumber));
     if (currentQNumber > 1) {
       dispatch(currentQuestionNumber(currentQNumber - 1));

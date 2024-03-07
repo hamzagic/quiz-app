@@ -14,7 +14,7 @@ const QuizClient = (props) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [differences, setDifferences] = useState({});
   const [emailError, setEmailError] = useState('');
@@ -45,7 +45,7 @@ const QuizClient = (props) => {
       setInvalidQuiz(true);
       console.log(err)
     });
-  },[id, currentQuestion, dispatch, isFinishedQuiz, differences]);
+  },[id, currentQuestion, dispatch, isFinishedQuiz, differences, answer]);
 
   const handlePreviousQuestion = () => {
     if (currentQuestion >= 1) {
@@ -55,6 +55,7 @@ const QuizClient = (props) => {
   }
 
   const handleNextQuestion = () => {
+    console.log(answer);
     if(!answer) {
       setCheckError('You need to choose an alternative');
       return;
@@ -203,9 +204,9 @@ const QuizClient = (props) => {
       {!isFinishedQuiz && 
         <div className={styles.questionsContainer}>
         <p className={styles.questionTitle}><span className={styles.questionNumber}>{ currentQuestion + 1 }</span> - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? ''}</p>
-        { loadedQuiz.questions?.[currentQuestion]?.answers?.map((answer, index) => 
+        { loadedQuiz.questions?.[currentQuestion]?.answers?.map((ans, index) => 
               <ul key={index}>
-                <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={handleAnswer} value={index} /><span className={styles.answerText}>{answer}</span></li>
+                <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={handleAnswer} value={index} /><span className={styles.answerText}>{ans}</span></li>
               </ul>
         )}
         <div className={styles.buttonsContainer}>

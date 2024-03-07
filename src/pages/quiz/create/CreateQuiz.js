@@ -29,6 +29,7 @@ const CreateQuiz = () => {
   const [message, setMessage] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [nameError, setNameError] = useState("");
+  const [questionTextError, setQuestionTextError] = useState("");
   const [showQuestions, setShowQuestions] = useState(false);
   const dispatch = useDispatch();
   const quizName = useSelector(state => state.createQuiz.quizName);
@@ -40,10 +41,12 @@ const CreateQuiz = () => {
   const quizQuestions = useSelector(state => state.createQuiz.questions);
   const isEditQuiz = useSelector(state => state.quizDetails.isEdit);
   const quizId = useSelector(state => state.quizDetails.currentId);
+  const [startedQuizCreation, setStartedQuizCreation] = useState(false);
+  const [choiceTextError, setChoiceTextError] = useState('');
 
   useEffect(() => {
     if(quizName) setName(quizName);
-  },[dispatch, numberOfChoices, quizName, currentChoices, quizId]);
+  },[dispatch, numberOfChoices, quizName, currentChoices, quizId, startedQuizCreation, questionTextError]);
 
   const history = useHistory();
 
@@ -98,7 +101,6 @@ const CreateQuiz = () => {
   };
 
   const handleFinishQuiz = async () => {
-    console.log('submit');
     if (hasErrors) return;
     setErrorMsg("");
     setMessage("");
@@ -120,7 +122,6 @@ const CreateQuiz = () => {
       numberOfQuestions: numberOfQuestions,
       questions: questions
     }
-    console.log(data)
     if(isEditQuiz) {
       await API.post('quiz/update/' + quizId, data)
       .then(res => {
@@ -184,7 +185,6 @@ const CreateQuiz = () => {
   };
 
   const handleNextClick = (data) => {
-    // check if quiz name is valid
     validateField(name, 6, setNameError);
     if (!name) return;
     // check if image has been added
@@ -192,15 +192,48 @@ const CreateQuiz = () => {
     dispatch(addQuizName(name));
     dispatch(currentQuestionNumber(currentQNumber ? parseInt(currentQNumber) + 1 : 1));
     setShowQuestions(true);
+    setStartedQuizCreation(true);
   };
 
+  const validateCurrentChoices = (choices) => {
+    let errors = 0;
+    if (choices.length ===0) {
+      errors++;
+      setChoiceTextError('The question must have at least 2 choices');
+    } else {
+      setChoiceTextError('');
+    }
+
+    choices.forEach(choice => {
+      if (choice.trim().length === 0) {
+        setChoiceTextError('All choices must be filled');
+        errors++;
+      } else {
+        setChoiceTextError('');
+      }
+    });
+    console.log(errors);
+    return errors;
+  }
+
+  const validateCurrentQuestion = (question) => {
+    if (question.length === 0) {
+      setQuestionTextError('The question field must not be empty');
+      return false;
+    } else {
+      setQuestionTextError('');
+      return true;
+    }
+  }
+
   const handleNextQuestion = () => {
-    console.log('value', currentCorrectChoice)
-    // if (quizQuestions && quizQuestions.length > currentQNumber) {
+    // if(!validateCurrentQuestion(currentQuestionText) || validateCurrentChoices(currentChoices) > 0) {
+    //   console.log(validateCurrentQuestion(currentQuestionText),validateCurrentChoices(currentChoices) > 0);
+    //   return;
+    // }
       if (currentQNumber <= quizQuestions.length) {
       quizQuestions.filter(question => {
         if (question.order === currentQNumber + 1) {
-          console.log('current number + 1');
           dispatch(currentQuestionNumber(currentQNumber + 1));
           dispatch(addQuestionText(question.questionText));
           dispatch(addChoices(question.answers));
@@ -221,8 +254,6 @@ const CreateQuiz = () => {
           }
         } else {
           if(isEditQuiz) {
-            console.log('current number');
-            console.log('current choice', currentCorrectChoice);
             const updatedQuestion = {
               order: currentQNumber,
               questionText: currentQuestionText,
@@ -232,6 +263,8 @@ const CreateQuiz = () => {
               questionImage: ''
             }
             dispatch(updateQuestion(updatedQuestion));
+            dispatch(currentQuestionNumber(currentQNumber + 1));
+          } else {
             dispatch(currentQuestionNumber(currentQNumber + 1));
           }
         }
@@ -306,7 +339,6 @@ const CreateQuiz = () => {
           <div className={styles.inputGrid}>
             <div className={styles.titles}>
               <div>Quiz Name: </div>
-              <div></div>
               <div>Image (optional): </div>
             </div>
             <div className={styles.descriptions}>
@@ -323,15 +355,17 @@ const CreateQuiz = () => {
           <div className={styles.btnContainer}>
             <Button
               title="Next"
-              styles={hasErrors ? btnDisabled : btnCreateStyle}
+              styles={hasErrors || startedQuizCreation ? btnDisabled : btnCreateStyle}
               click={handleNextClick}
-              disabled={hasErrors}
+              disabled={hasErrors || startedQuizCreation}
             />
           </div>
         </div>
         {showQuestions && (
           <>
             <Question />
+            {questionTextError && <div className={styles.errorMessage}>{questionTextError}</div>}
+            {choiceTextError && <div className={styles.errorMessage}>{choiceTextError}</div>}
             <div className={styles.buttonsContainer}>
               <Button title="Previous Question" styles={nextStyles} click={handlePreviousQuestion} />
               <Button title="Next Question" styles={nextStyles} click={handleNextQuestion} />

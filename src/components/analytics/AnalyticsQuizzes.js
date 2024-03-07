@@ -38,9 +38,11 @@ const AnalyticsQuizzes = () => {
     <div>
       <h2>Latest Activities</h2>
       <div>
-        <p>Total quizzes: {quizList.length}</p>
         <p>Active quizzes: {activeQuizzes}</p>
         <p>Shared quizzes: {sharedQuizzes}</p>
+        <p>Latest Activities</p>
+        <p>New quizzes</p>
+        <p>New shares</p>
       </div>
     </div>
   );
