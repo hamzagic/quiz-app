@@ -168,9 +168,7 @@ const CreateQuiz = () => {
   const handleName = (e) => {
     setName(e.target.value);
     validateField(name, 6, setNameError);
-    if(isEditQuiz) {
-      dispatch(addQuizName(e.target.value));
-    }
+    dispatch(addQuizName(e.target.value));
   };
 
   const validateField = (value, min, fn) => {
