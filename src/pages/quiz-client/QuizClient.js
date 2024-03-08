@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import API from '../../routes/api';
 import Button from "../../components/button/Button";
-import { addCurrentQuestion, storeLoadedQuiz } from "../../store/reducers/quizClientReducer";
+import { addCurrentQuestion, storeLoadedQuiz, currentAnswer, setAnswerData } from "../../store/reducers/quizClientReducer";
 import Input from "../../components/input/Input";
 import Validator from "../../utils/validator";
 import styles from './QuizClient.module.scss';
@@ -14,7 +14,7 @@ const QuizClient = (props) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [answer, setAnswer] = useState(null);
+  const [answer, setAnswer] = useState('');
   const [answers, setAnswers] = useState([]);
   const [differences, setDifferences] = useState({});
   const [emailError, setEmailError] = useState('');
@@ -28,6 +28,7 @@ const QuizClient = (props) => {
   const dispatch = useDispatch();
   const [invalidQuiz, setInvalidQuiz] = useState(false);
   const [score, setScore] = useState('');
+  const storeAnswers = useSelector(state => state.quizClient.answerData);
  
   useEffect(() => {
     API.get('client/'+id)
@@ -51,6 +52,8 @@ const QuizClient = (props) => {
     if (currentQuestion >= 1) {
       setCurrentQuestion(currentQuestion - 1);
       dispatch(addCurrentQuestion(currentQuestion - 1));
+      dispatch(setAnswerData({ order: currentQuestion, answer: answer }));
+      setAnswer('');
     }
   }
 
@@ -60,13 +63,19 @@ const QuizClient = (props) => {
       setCheckError('You need to choose an alternative');
       return;
     }
-    if (currentQuestion + 1 <= questionQty) {
+    if (currentQuestion + 1 < questionQty) {
+      console.log('current question', currentQuestion);
       setCurrentQuestion(currentQuestion + 1);
+      dispatch(setAnswerData({ order: currentQuestion, answer: answer }));
       dispatch(addCurrentQuestion(currentQuestion + 1));
       setCheckError('');
+      setAnswer('');
     }
 
     if (currentQuestion + 1 === questionQty) {
+      console.log('current question', currentQuestion);
+      setCurrentQuestion(currentQuestion + 1);
+      dispatch(setAnswerData({ order: currentQuestion, answer: answer }));
       setIsFinishedQuiz(true);
       setCheckError('');
       setAnswer('');
@@ -114,10 +123,16 @@ const QuizClient = (props) => {
   const handleSubmit = () => {
     setMessage('');
     setErrorMessage('');
+    const updatedAnswers = [];
+    storeAnswers.forEach(item => {
+      updatedAnswers.push(parseInt(item.answer));
+      return updatedAnswers;
+    }); 
+
     const data = {
       name,
       email,
-      answers,
+      answers: updatedAnswers,
       quizToken: id
     }; 
     const hasErrors = validateFields();
@@ -149,8 +164,7 @@ const QuizClient = (props) => {
 
   const handleAnswer = (e) => {
     setAnswer(e.target.value);
-    const updatedAnswer = [...answers, parseInt(e.target.value)];
-    setAnswers(updatedAnswer);
+    dispatch(currentAnswer(e.target.value));
   }
 
   const getCorrectAnswer = (index, i) => differences.filter(diff => 
