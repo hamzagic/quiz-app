@@ -21,9 +21,9 @@ export const quizClientSlice = createSlice({
     },
     setAnswerData: (state, action) => {
       const { order, answer } = action.payload;
-      if (answer.trim() === '') {
-        return;
-      }
+      // if (answer.trim() === '') {
+      //   return;
+      // }
 
       const existingIndex = state.answerData.findIndex(item => item.order === order);
       if (existingIndex >= 0) {

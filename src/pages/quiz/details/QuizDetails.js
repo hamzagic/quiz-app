@@ -26,14 +26,14 @@ const QuizDetails = (props) => {
     const history = useHistory();
     const [message, setMessage] = useState('');
     const [updatedQuizData, setUpdatedQuizData] = useState({});
-    const shareLinkPath = 'localhost:3000/client/';
+    // const shareLinkPath = 'localhost:3000/client/';
     const [isShared, setIsShared] = useState(false);
+    const [sharedLink, setSharedLink] = useState('');
 
     useEffect(() => {
-        console.log(process.env.NODE_ENV)
-        console.log(details);
-        console.log('shared', isShared)
-    }, [details, showPanel,updatedQuizData, isShared]);
+        // console.log(process.env.NODE_ENV)
+        console.log('shared link', sharedLink)
+    }, [details, showPanel,updatedQuizData, isShared, sharedLink]);
 
     const btnStyle = {
         border: 'none',
@@ -88,6 +88,20 @@ const QuizDetails = (props) => {
         history.push('quiz/create');
     }
 
+    const updateDetails = async () => {
+        console.log('requesting...');
+        await API.get(`quiz/details/${details._id}`, {
+            headers: { token }
+        })
+        .then(res => {
+            console.log(res);
+            console.log(res.data.data.sharedLink);
+            setSharedLink(res.data.data.sharedLink);
+            console.log('done.');
+        })
+        .catch(err => console.log(err));
+    }
+
     const handleShare = () => {
         const shareConfirm = window.confirm('Are you sure you want to share the quiz? This action cannot be undone.');
         if (shareConfirm) {
@@ -100,6 +114,7 @@ const QuizDetails = (props) => {
                 details = res.data.data;
                 setUpdatedQuizData(res.data.data);
                 setMessage('Quiz Shared Successfully!');
+                updateDetails();
             })
             .catch(err => console.log(err));
         }
@@ -187,7 +202,7 @@ const QuizDetails = (props) => {
                     <div className={styles.itemContainer}>
                         {/* todo: all full path in the link, not only the token */}
                         <div className={styles.detailTitle}>Share Link:</div>
-                        <div>{ details.sharedLink || 'Not shared yet'}</div>
+                        <div>{ sharedLink || details.sharedLink || 'Not shared yet'}</div>
                     </div>
                     <div className={styles.buttonContainer}>
                         <Button title="Share Quiz" styles={details.isShared || isShared ? disabledButtonStyles : buttonStyles} click={handleShare} disabled={details.isShared} />

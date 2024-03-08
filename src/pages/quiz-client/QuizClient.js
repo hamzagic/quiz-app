@@ -29,6 +29,7 @@ const QuizClient = (props) => {
   const [invalidQuiz, setInvalidQuiz] = useState(false);
   const [score, setScore] = useState('');
   const storeAnswers = useSelector(state => state.quizClient.answerData);
+  const currentAnswerData = useSelector(state => state.quizClient.currentAnswer);
  
   useEffect(() => {
     API.get('client/'+id)
@@ -44,21 +45,20 @@ const QuizClient = (props) => {
     })
     .catch(err => {
       setInvalidQuiz(true);
-      console.log(err)
+      console.log(err);
     });
-  },[id, currentQuestion, dispatch, isFinishedQuiz, differences, answer]);
+  },[id, currentQuestion, dispatch, isFinishedQuiz, differences, answer, currentAnswerData]);
 
   const handlePreviousQuestion = () => {
     if (currentQuestion >= 1) {
       setCurrentQuestion(currentQuestion - 1);
       dispatch(addCurrentQuestion(currentQuestion - 1));
       dispatch(setAnswerData({ order: currentQuestion, answer: answer }));
-      setAnswer('');
+      dispatch(currentAnswer(null))
     }
   }
 
   const handleNextQuestion = () => {
-    console.log(answer);
     if(!answer) {
       setCheckError('You need to choose an alternative');
       return;
@@ -69,16 +69,15 @@ const QuizClient = (props) => {
       dispatch(setAnswerData({ order: currentQuestion, answer: answer }));
       dispatch(addCurrentQuestion(currentQuestion + 1));
       setCheckError('');
-      setAnswer('');
+      dispatch(currentAnswer(null));
     }
 
     if (currentQuestion + 1 === questionQty) {
-      console.log('current question', currentQuestion);
       setCurrentQuestion(currentQuestion + 1);
       dispatch(setAnswerData({ order: currentQuestion, answer: answer }));
       setIsFinishedQuiz(true);
       setCheckError('');
-      setAnswer('');
+      dispatch(currentAnswer(null));
     }
   }
 
@@ -162,9 +161,10 @@ const QuizClient = (props) => {
 
   }
 
-  const handleAnswer = (e) => {
-    setAnswer(e.target.value);
-    dispatch(currentAnswer(e.target.value));
+  const handleAnswer = (value) => {
+    console.log(value);
+    setAnswer(value);
+    dispatch(currentAnswer(value));
   }
 
   const getCorrectAnswer = (index, i) => differences.filter(diff => 
@@ -220,7 +220,7 @@ const QuizClient = (props) => {
         <p className={styles.questionTitle}><span className={styles.questionNumber}>{ currentQuestion + 1 }</span> - { loadedQuiz.questions?.[currentQuestion]?.questionText ?? ''}</p>
         { loadedQuiz.questions?.[currentQuestion]?.answers?.map((ans, index) => 
               <ul key={index}>
-                <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={handleAnswer} value={index} /><span className={styles.answerText}>{ans}</span></li>
+                <li><input type="radio" name={`alternative-${currentQuestion}`} onChange={() => handleAnswer(index)} value={index} /><span className={styles.answerText}>{ans}</span></li>
               </ul>
         )}
         <div className={styles.buttonsContainer}>
