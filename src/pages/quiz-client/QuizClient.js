@@ -227,7 +227,7 @@ const QuizClient = (props) => {
           <Button title="Previous Question" styles={currentQuestion === 0 ? btnDisabled : btnStyle} click={handlePreviousQuestion} disabled={currentQuestion < 1} />
           <Button title={currentQuestion + 1 === questionQty ? "Finish Quiz" : "Next Question"} styles={btnStyle} click={handleNextQuestion} />
         </div> 
-        {checkError && <p>{checkError}</p>}
+        {checkError && <p className={styles.errorMessage}>{checkError}</p>}
       </div>
       }
       {isFinishedQuiz && !isSubmitted && 

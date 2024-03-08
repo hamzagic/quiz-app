@@ -10,6 +10,8 @@ const AnalyticsQuizzes = () => {
   const [quizList, setQuizList] = useState([]);
   const [activeQuizzes, setActiveQuizzes] = useState(0);
   const [sharedQuizzes, setSharedQuizzes] = useState(0);
+  const [attempts, setAttempts] = useState([]);
+  const [attemptsCount, setAttemptsCount] = useState(0);
 
   const getActiveQuizzes = (data) => {
     const active = data.filter(data => data.isActive === true);
@@ -32,7 +34,24 @@ const AnalyticsQuizzes = () => {
       .catch(err => console.log(err));
     }
     fetchData();
-  },[decoded.id, activeQuizzes]);
+
+    const fetchLatestAttempts = async () => {
+      const data = {
+        id: decoded.id
+      }
+      await API.post(apiConstants.quiz_post + '/attempts/list/', data, {
+        headers: {
+          token
+        }
+      })
+      .then(res => {
+        setAttempts(res.data.attempts);
+        setAttemptsCount(res.data.totalCount);
+      })
+      .catch(err => console.log(err));
+    }
+    fetchLatestAttempts();
+  },[decoded.id, activeQuizzes, token]);
   
   return (
     <div>
@@ -41,8 +60,16 @@ const AnalyticsQuizzes = () => {
         <p>Active quizzes: {activeQuizzes}</p>
         <p>Shared quizzes: {sharedQuizzes}</p>
         <p>Latest Activities</p>
-        <p>New quizzes</p>
-        <p>New shares</p>
+        {attempts.map((attempt, index) => 
+          <div key={index}>
+            <p>Name: {attempt.name}</p>
+            <p>Email (optional): {attempt.email}</p>
+            <p>Score: {attempt.score}</p>
+            <p>Quiz: {attempt.quiz.quizName}</p>
+          </div>
+        )}
+        <p>Most recent created quizzes</p>
+        <p>Most recent shares</p>
       </div>
     </div>
   );
